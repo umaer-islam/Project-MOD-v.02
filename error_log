@@ -1,0 +1,25 @@
+[28-Jun-2026 21:57:04 UTC] PHP Warning:  require_once(database/connection.php): Failed to open stream: No such file or directory in /home/mamunort/public_html/index.php on line 3
+[28-Jun-2026 21:57:04 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'database/connection.php' (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home/mamunort/public_html/index.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/mamunort/public_html/index.php on line 3
+[28-Jun-2026 21:57:09 UTC] PHP Warning:  require_once(database/connection.php): Failed to open stream: No such file or directory in /home/mamunort/public_html/index.php on line 3
+[28-Jun-2026 21:57:09 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'database/connection.php' (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home/mamunort/public_html/index.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/mamunort/public_html/index.php on line 3
+[28-Jun-2026 21:57:14 UTC] PHP Warning:  require_once(database/connection.php): Failed to open stream: No such file or directory in /home/mamunort/public_html/index.php on line 3
+[28-Jun-2026 21:57:14 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'database/connection.php' (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home/mamunort/public_html/index.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/mamunort/public_html/index.php on line 3
+[28-Jun-2026 21:57:18 UTC] PHP Warning:  require_once(database/connection.php): Failed to open stream: No such file or directory in /home/mamunort/public_html/index.php on line 3
+[28-Jun-2026 21:57:18 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'database/connection.php' (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home/mamunort/public_html/index.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/mamunort/public_html/index.php on line 3
+[28-Jun-2026 21:57:41 UTC] PHP Warning:  require_once(database/connection.php): Failed to open stream: No such file or directory in /home/mamunort/public_html/index.php on line 3
+[28-Jun-2026 21:57:41 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'database/connection.php' (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home/mamunort/public_html/index.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/mamunort/public_html/index.php on line 3

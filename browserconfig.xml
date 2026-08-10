@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browserconfig>
+  <msapplication>
+    <name>Mamun's Ortho Dental</name>
+    <tile>
+      <square70x70logo src="https://mamunorthodental.com/Logo.png"/>
+      <square150x150logo src="https://mamunorthodental.com/Logo.png"/>
+      <square310x310logo src="https://mamunorthodental.com/Logo.png"/>
+      <wide310x150logo src="https://mamunorthodental.com/Logo.png"/>
+      <square310x310logo src="https://mamunorthodental.com/Logo.png"/>
+      <TileColor>#ea741b</TileColor>
+      <TileImage src="https://mamunorthodental.com/Logo.png"/>
+    </tile>
+    <browser>
+      <os>
+        <os-identity>
+          <os-name>Windows</os-name>
+        </os-identity>
+      </os>
+      <jumpListItems>
+        <staticItems>
+          <item name="Book Appointment" action="https://mamunorthodental.com/#appointment" icon="https://mamunorthodental.com/Logo.png"/>
+          <item name="Our Services" action="https://mamunorthodental.com/#services" icon="https://mamunorthodental.com/Logo.png"/>
+          <item name="Meet the Doctor" action="https://mamunorthodental.com/dr-shamim-al-mamun.php" icon="https://mamunorthodental.com/Logo.png"/>
+          <item name="Contact Us" action="https://mamunorthodental.com/contact.php" icon="https://mamunorthodental.com/Logo.png"/>
+        </staticItems>
+      </jumpListItems>
+      <notification>
+        <polling enabled="false"/>
+        <notification-template>
+          <![CDATA[
+          <toast>
+            <visual>
+              <binding template="ToastGeneric">
+                <text>Mamun's Ortho Dental</text>
+                <text>Expert dental care in Lalmatia, Dhaka</text>
+              </binding>
+            </visual>
+            <audio src="ms-winsoundevent:Notification.Default"/>
+          </toast>
+          ]]>
+        </notification-template>
+      </notification>
+      <shortcuts>
+        <shortcut name="Book Appointment" action="https://mamunorthodental.com/#appointment" icon="https://mamunorthodental.com/Logo.png" />
+        <shortcut name="Our Services" action="https://mamunorthodental.com/#services" icon="https://mamunorthodental.com/Logo.png" />
+        <shortcut name="Meet the Doctor" action="https://mamunorthodental.com/dr-shamim-al-mamun.php" icon="https://mamunorthodental.com/Logo.png" />
+        <shortcut name="Contact Us" action="https://mamunorthodental.com/contact.php" icon="https://mamunorthodental.com/Logo.png" />
+      </shortcuts>
+    </browser>
+    <square30x30logo src="https://mamunorthodental.com/Logo.png"/>
+    <pinnedDomain>mamunorthodental.com</pinnedDomain>
+  </msapplication>
+</browserconfig>

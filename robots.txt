@@ -1,0 +1,46 @@
+# Mamun's Ortho Dental — robots.txt
+# Best Dental Clinic in Lalmatia, Dhaka, Bangladesh
+User-agent: *
+Allow: /
+
+# Public pages
+Allow: /index.php
+Allow: /dr-shamim-al-mamun.php
+Allow: /contact.php
+Allow: /services/
+Allow: /blog/
+
+# Block admin/dashboard pages
+Disallow: /dashboard.php
+Disallow: /login.php
+Disallow: /login_page.php
+Disallow: /logout.php
+Disallow: /patients.php
+Disallow: /appointments.php
+Disallow: /prescriptions.php
+Disallow: /create_prescription.php
+Disallow: /print_prescription.php
+Disallow: /payments.php
+Disallow: /reports.php
+Disallow: /users.php
+Disallow: /doctors.php
+Disallow: /treatments.php
+Disallow: /announcements.php
+Disallow: /gallery.php
+Disallow: /cases.php
+Disallow: /testimonials.php
+Disallow: /services.php
+Disallow: /messages.php
+Disallow: /profile.php
+Disallow: /patient_record.php
+Disallow: /print_prescription.php
+Disallow: /api/
+Disallow: /database/
+Disallow: /components/
+Disallow: /uploads/
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://mamunorthodental.com/sitemap.xml

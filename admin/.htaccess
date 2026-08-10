@@ -1,0 +1,6 @@
+# Mamun's Ortho Dental — Admin Directory
+Options -Indexes
+
+<FilesMatch "\.(env|log|sql|bak|old|tmp|ini|conf)$">
+    Require all denied
+</FilesMatch>

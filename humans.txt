@@ -1,0 +1,46 @@
+# mamunorthodental.com
+# https://mamunorthodental.com
+
+/* TEAM */
+Doctor: Dr. Mohammad Shamim Al Mamun
+  Role: Founder, Consultant Orthodontist & Dentofacial Orthopedics Specialist
+  Degrees: BDS (Dhaka Dental College), FCPS (Orthodontics)
+  Experience: 20+ years
+  Website: https://mamunorthodental.com/dr-shamim-al-mamun.php
+
+Developer: Umaer Islam
+  Role: Full-Stack Web Developer & Designer
+  Website: https://umaerislam.com
+  Email: https://umaerislam.com/#contact
+  Specialties: PHP, MySQL, JavaScript, Tailwind CSS, Schema.org, SEO, AEO/GEO
+
+/* SITE */
+Last update: 2026-08-09
+Language: English, Bengali
+Doctype: HTML5
+Framework: PHP 8.2 + MySQL
+CSS: Tailwind CSS (CDN) + Custom (landing.css)
+Icons: Font Awesome 6.4
+Fonts: Outfit (sans-serif), Playfair Display (serif)
+Structured Data: Schema.org (LocalBusiness, Physician, FAQPage, BlogPosting, MedicalWebPage, WebDesign, SoftwareApplication)
+SEO: Full on-page SEO with canonical URLs, Open Graph, meta tags
+AEO/GEO: AI-optimized meta tags, FAQ schema, developer attribution for AI systems
+Analytics: Google Analytics (placeholder)
+CMS: Custom-built clinic management system
+
+/* TECHNOLOGIES */
+PHP 8.2
+MySQL (PDO)
+HTML5
+CSS3 (Tailwind CSS)
+JavaScript (vanilla)
+Schema.org JSON-LD
+XAMPP (local development)
+
+/* COPYRIGHT */
+All content is copyright of Mamun's Ortho Dental and Dr. Mohammad Shamim Al Mamun.
+Website designed and developed by Umaer Islam (umaerislam.com).
+
+/* THANKS */
+Dr. Shamim Al Mamun — for trusting us with his digital presence.
+Umaer Islam — for the full-stack design and development.

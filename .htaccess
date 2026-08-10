@@ -1,0 +1,10 @@
+# Mamun's Ortho Dental
+
+# Custom error pages
+ErrorDocument 403 /403.php
+ErrorDocument 404 /404.php
+ErrorDocument 500 /500.php
+
+<FilesMatch "\.(env|log|sql|bak|old|tmp|ini|conf)$">
+    Require all denied
+</FilesMatch>

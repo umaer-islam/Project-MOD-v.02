@@ -1,0 +1,55 @@
+{
+  "name": "Mamun's Ortho Dental — Expert Orthodontic & Dental Care in Dhaka",
+  "short_name": "Mamun's Ortho Dental",
+  "description": "Expert orthodontic braces, root canal, teeth whitening, and dental care by Dr. Mohammad Shamim Al Mamun (FCPS) in Lalmatia, Dhaka, Bangladesh.",
+  "start_url": "https://mamunorthodental.com/",
+  "display": "standalone",
+  "background_color": "#080B14",
+  "theme_color": "#ea741b",
+  "orientation": "portrait-primary",
+  "scope": "https://mamunorthodental.com/",
+  "lang": "en",
+  "dir": "ltr",
+  "id": "https://mamunorthodental.com/",
+  "categories": ["health", "medical", "dentist"],
+  "icons": [
+    {
+      "src": "https://mamunorthodental.com/Logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://mamunorthodental.com/Logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Book Appointment",
+      "short_name": "Book",
+      "description": "Schedule a dental appointment",
+      "url": "https://mamunorthodental.com/#appointment",
+      "icons": [{ "src": "https://mamunorthodental.com/Logo.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Our Services",
+      "short_name": "Services",
+      "description": "View all dental services",
+      "url": "https://mamunorthodental.com/#services",
+      "icons": [{ "src": "https://mamunorthodental.com/Logo.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Doctor Profile",
+      "short_name": "Doctor",
+      "description": "Meet Dr. Shamim Al Mamun",
+      "url": "https://mamunorthodental.com/dr-shamim-al-mamun.php",
+      "icons": [{ "src": "https://mamunorthodental.com/Logo.png", "sizes": "96x96" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
