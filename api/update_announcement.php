@@ -3,6 +3,7 @@ session_start();
 require_once '../components/auth_guard.php';
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/cache.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login_page.php");
@@ -26,6 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$title, $description, $visibility, $expiry_date, $id]);
         log_activity($pdo, 'UPDATE_ANNOUNCEMENT', "Updated announcement: {$title}");
         header("Location: ../announcements.php?success=Announcement+updated");
+        cache_forget('pub:announcements');
+        cache_forget('dash:notices');
         exit;
     } catch (PDOException) {
         header("Location: ../announcements.php?error=" . urlencode("A database error occurred. Please try again."));

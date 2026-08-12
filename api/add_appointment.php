@@ -3,6 +3,7 @@ session_start();
 require_once '../components/auth_guard.php';
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/cache.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $patient_id = (int)($_POST['patient_id'] ?? 0);
@@ -28,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         log_activity($pdo, 'BOOK_APPOINTMENT', "Booked appointment for {$pName} on {$appointment_date} at {$appointment_time}");
         
         header("Location: ../appointments.php?success=Appointment+booked");
+        cache_flush('dash:');
         exit;
 
     } catch (PDOException) {

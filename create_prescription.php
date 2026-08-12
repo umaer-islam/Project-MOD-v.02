@@ -899,6 +899,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const saveBtn = document.getElementById('saveSettingsBtn');
         saveBtn.disabled = true;
         saveBtn.textContent = 'Uploading...';
+        const loadToast = AdminToast.show('Uploading template settings...', 'loading');
         
         const fd = new FormData(settingsForm);
         fetch('api/upload_rx_settings.php', {
@@ -909,8 +910,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => {
             saveBtn.disabled = false;
             saveBtn.textContent = 'Save Configurations';
+            AdminToast.dismiss(loadToast);
             if (res.status === 'success') {
-                alert("Configurations saved!");
+                AdminToast.show("Configurations saved!", "success");
                 
                 // Update live previews
                 if (res.template_path) {
@@ -921,13 +923,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const modal = bootstrap.Modal.getInstance(document.getElementById('settingsModal'));
                 modal.hide();
             } else {
-                alert("Error: " + res.message);
+                AdminToast.show("Error: " + res.message, "error");
             }
         })
         .catch(err => {
             saveBtn.disabled = false;
             saveBtn.textContent = 'Save Configurations';
-            alert("An upload error occurred.");
+            AdminToast.dismiss(loadToast);
+            AdminToast.show("An upload error occurred.", "error");
         });
     });
 
@@ -936,13 +939,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Run standard Validation
         if (!form.checkValidity()) {
             form.classList.add('was-validated');
-            alert("Please fill in all required fields (Patient Name, Diagnosis, and Date).");
+            AdminToast.show("Please fill in all required fields (Patient Name, Diagnosis, and Date).", "error");
             return;
         }
 
         const submitBtn = document.getElementById('submitSaveBtn');
         submitBtn.disabled = true;
         submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Saving Prescription...`;
+        const loadToast = AdminToast.show('Saving prescription, please wait...', 'loading');
 
         const fd = new FormData(form);
         fetch(form.action, {
@@ -953,6 +957,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => {
             submitBtn.disabled = false;
             submitBtn.innerHTML = `<i class="fas fa-print me-2"></i> Save &amp; Print Prescription`;
+            AdminToast.dismiss(loadToast);
             
             if (res.status === 'success') {
                 // Clear local draft cache
@@ -964,15 +969,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Redirect parent to registry log
                 window.location.href = 'prescriptions.php?success=Prescription saved successfully';
             } else {
-                alert("Saving Error: " + res.message);
+                AdminToast.show("Saving Error: " + res.message, "error");
             }
         })
         .catch(err => {
             submitBtn.disabled = false;
             submitBtn.innerHTML = `<i class="fas fa-print me-2"></i> Save &amp; Print Prescription`;
-            alert("An unexpected server error occurred.");
+            AdminToast.dismiss(loadToast);
+            AdminToast.show("An unexpected server error occurred.", "error");
         });
     });
+
 
     // Recover draft cache on startup
     recoverDraft();

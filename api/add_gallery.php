@@ -3,6 +3,7 @@ session_start();
 require_once '../components/auth_guard.php';
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/cache.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ../gallery.php');
@@ -42,6 +43,7 @@ try {
     $stmt = $pdo->prepare("INSERT INTO gallery (image_path, caption, sort_order) VALUES (?, ?, ?)");
     $stmt->execute([$dbPath, $caption, $sort_order]);
     log_activity($pdo, 'UPLOAD_GALLERY_IMAGE', "Uploaded gallery image: " . ($caption ?: 'Untitled'));
+    cache_forget('pub:gallery');
     header('Location: ../gallery.php?success=Image+added+successfully.');
 } catch (PDOException $e) {
     @unlink($destPath);

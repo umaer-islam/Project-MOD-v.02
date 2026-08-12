@@ -3,6 +3,7 @@ session_start();
 require_once '../components/auth_guard.php';
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/cache.php';
 
 $id = (int)($_POST['id'] ?? 0);
 if (!$id) { header('Location: ../cases.php?error=Invalid+ID'); exit; }
@@ -19,6 +20,7 @@ try {
         $pdo->prepare("DELETE FROM before_after_cases WHERE id = ?")->execute([$id]);
 
         log_activity($pdo, 'DELETE_CASE_STUDY', "Deleted case study: {$row['title']}");
+        cache_forget('pub:cases');
 
         header('Location: ../cases.php?success=Case+deleted.');
     } else {

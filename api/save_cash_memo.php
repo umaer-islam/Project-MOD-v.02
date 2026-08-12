@@ -3,6 +3,7 @@ session_start();
 require_once '../components/auth_guard.php';
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/cache.php';
 restrict_access(['admin', 'doctor', 'receptionist']);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -69,6 +70,7 @@ try {
         $pdo->commit();
         log_activity($pdo, 'UPDATE_CASH_MEMO', "Updated cash memo {$memo_number} for {$customer_name} — Total: ৳{$grand_total}");
         header("Location: ../payments.php?tab=memos&success=" . urlencode("Cash memo updated successfully."));
+        cache_flush('dash:');
         exit;
 
     } else {
@@ -92,6 +94,7 @@ try {
         $pdo->commit();
         log_activity($pdo, 'CREATE_CASH_MEMO', "Created cash memo {$memo_number} for {$customer_name} — Total: ৳{$grand_total}");
         header("Location: ../payments.php?tab=memos&success=" . urlencode("Cash memo {$memo_number} created successfully."));
+        cache_flush('dash:');
         exit;
     }
 

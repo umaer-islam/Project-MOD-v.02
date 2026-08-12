@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../components/assets.php';
 $page_title = "Teeth Whitening in Dhaka — Professional Treatment";
 $page_desc = "Professional teeth whitening in Lalmatia, Dhaka. Get a brighter, whiter smile at Mamun's Ortho Dental. Safe, effective whitening by experienced dentists. Book today.";
 $page_canonical = "https://mamunorthodental.com/services/teeth-whitening-dhaka.php";
@@ -32,7 +33,7 @@ $page_canonical = "https://mamunorthodental.com/services/teeth-whitening-dhaka.p
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="../assets/css/landing.css">
+<link rel="stylesheet" href="<?= asset('../assets/css/landing.css') ?>">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{navy:'#004591','navy-dark':'#003070',gold:'#ea741b'},fontFamily:{serif:['"Playfair Display"','serif'],sans:['"Outfit"','sans-serif']}}}}</script>
 <script type="application/ld+json">

@@ -3,6 +3,7 @@ session_start();
 require_once '../components/auth_guard.php';
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/cache.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ../cases.php');
@@ -52,6 +53,7 @@ try {
     $pdo->prepare("INSERT INTO before_after_cases (title, description, before_image, after_image) VALUES (?,?,?,?)")
         ->execute([$title, $description, $beforePath, $afterPath]);
     log_activity($pdo, 'ADD_CASE_STUDY', "Added before & after case study: {$title}");
+    cache_forget('pub:cases');
     header('Location: ../cases.php?success=Case+study+added.');
 }
 catch (PDOException $e) {

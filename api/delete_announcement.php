@@ -3,6 +3,7 @@ session_start();
 require_once '../components/auth_guard.php';
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/cache.php';
 restrict_access(['admin']);
 
 
@@ -21,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$id]);
 
         log_activity($pdo, 'DELETE_ANNOUNCEMENT', "Deleted announcement: {$aTitle}");
+        cache_forget('pub:announcements');
 
         header("Location: ../announcements.php?success=Announcement+deleted");
         exit;

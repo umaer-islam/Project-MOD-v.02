@@ -3,6 +3,7 @@ session_start();
 require_once '../components/auth_guard.php';
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/patient_id_generator.php';
 header('Content-Type: application/json');
 restrict_access(['admin', 'doctor']);
 
@@ -71,13 +72,12 @@ try {
 
     // 1. Create or Update Patient
     if (empty($patient_id)) {
-        // Create new patient
-        $stmtStatus = $pdo->query("SELECT MAX(id) FROM patients");
-        $maxId = $stmtStatus->fetchColumn();
-        $newPatientId = 'PT-' . date('ym') . str_pad(($maxId + 1), 4, '0', STR_PAD_LEFT);
+        // Create new patient with encrypted MOD-XXXX ID
+        $newPatientId = get_next_patient_id($pdo);
+        $access_token = generate_access_token();
         
-        $stmt = $pdo->prepare("INSERT INTO patients (patient_id, name, phone, age, weight, blood_group) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$newPatientId, $patient_name, $phone, $age, $weight, $blood_group]);
+        $stmt = $pdo->prepare("INSERT INTO patients (patient_id, name, phone, age, weight, blood_group, access_token) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$newPatientId, $patient_name, $phone, $age, $weight, $blood_group, $access_token]);
         $patient_id = $pdo->lastInsertId();
     } else {
         // Update existing patient vitals
@@ -102,5 +102,6 @@ try {
 
 } catch (PDOException $e) {
     $pdo->rollBack();
-    echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
+    error_log('[SAVE_PRESCRIPTION FAILED] ' . $e->getMessage());
+    echo json_encode(['status' => 'error', 'message' => 'Database error occurred. Please try again.']);
 }

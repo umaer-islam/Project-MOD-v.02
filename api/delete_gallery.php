@@ -3,6 +3,7 @@ session_start();
 require_once '../components/auth_guard.php';
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/cache.php';
 
 $id = (int)($_POST['id'] ?? 0);
 if (!$id) { header('Location: ../gallery.php?error=Invalid+ID'); exit; }
@@ -17,6 +18,7 @@ try {
         $pdo->prepare("DELETE FROM gallery WHERE id = ?")->execute([$id]);
 
         log_activity($pdo, 'DELETE_GALLERY_IMAGE', "Deleted gallery image: " . ($row['caption'] ?: 'Untitled'));
+        cache_forget('pub:gallery');
 
         header('Location: ../gallery.php?success=Image+deleted.');
     } else {

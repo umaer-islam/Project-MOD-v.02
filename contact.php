@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'components/assets.php';
 $page_title = "Best Dental Clinic in Dhaka | Contact Mamun's Ortho Dental";
 $page_desc = "Contact Mamun's Ortho Dental — best dental clinic in Dhaka. Book an appointment with Dr. Shamim Al Mamun for expert orthodontic and dental care. Open Saturday to Thursday.";
 $page_canonical = "https://mamunorthodental.com/contact.php";
@@ -46,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="assets/css/landing.css">
+<link rel="stylesheet" href="<?= asset('assets/css/landing.css') ?>">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{navy:'#004591','navy-dark':'#003070',gold:'#ea741b'},fontFamily:{serif:['"Playfair Display"','serif'],sans:['"Outfit"','sans-serif']}}}}</script>
 <script type="application/ld+json">
@@ -62,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
     "telephone": "+8801712718527",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "5/2 (2nd Floor), Block A, Road 5, Lalmatia",
+      "streetAddress": "5/4 (2nd Floor), Block A, Road 5, Lalmatia",
       "addressLocality": "Mohammadpur",
       "addressRegion": "Dhaka",
       "postalCode": "1207",
@@ -92,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
         <div class="space-y-4 mb-8 text-white">
           <div class="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-4">
             <div class="w-10 h-10 rounded-xl bg-[#ea741b]/20 flex items-center justify-center shrink-0"><i class="fas fa-map-marker-alt text-[#ea741b]"></i></div>
-            <div><p class="font-bold text-lg mb-1">Clinic Address</p><p class="text-white/60 text-sm leading-relaxed">5/2 (2nd Floor), Block A, Road 5, Lalmatia<br>Mohammadpur, Dhaka-1207</p></div>
+            <div><p class="font-bold text-lg mb-1">Clinic Address</p><p class="text-white/60 text-sm leading-relaxed">5/4 (2nd Floor), Block A, Road 5, Lalmatia<br>Mohammadpur, Dhaka-1207</p></div>
           </div>
           <div class="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-4">
             <div class="w-10 h-10 rounded-xl bg-[#ea741b]/20 flex items-center justify-center shrink-0"><i class="fas fa-clock text-[#ea741b]"></i></div>

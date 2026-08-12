@@ -460,7 +460,7 @@
         <div class="stagger-children" style="display:flex;flex-direction:column;gap:2px;">
           <a href="https://maps.app.goo.gl/MJg2zb1qWj8xq2Uq6" target="_blank" class="info-row" style="display:flex;align-items:flex-start;gap:12px;text-decoration:none;color:inherit;">
             <i class="fas fa-map-marker-alt" style="color:var(--orange);font-size:13px;margin-top:2px;width:16px;text-align:center;"></i>
-            <p style="font-size:13px;color:var(--text);line-height:1.5;">5/2 (2nd Floor), Block A, Road 5, Lalmatia, Mohammadpur, Dhaka-1207</p>
+            <p style="font-size:13px;color:var(--text);line-height:1.5;">5/4 (2nd Floor), Block A, Road 5, Lalmatia, Mohammadpur, Dhaka-1207</p>
           </a>
           <div class="info-row" style="display:flex;align-items:center;gap:12px;">
             <i class="fas fa-clock" style="color:var(--navy);font-size:13px;width:16px;text-align:center;"></i>
@@ -567,7 +567,7 @@ TITLE:Senior Dental Surgeon
 TEL;TYPE=CELL,VOICE:+8801712313528
 EMAIL;TYPE=PREF,INTERNET:mamunddcbdc@gmail.com
 URL:https://mamunorthodental.com
-ADR;TYPE=WORK:;;5/2 (2nd Floor), Block A, Road 5, Lalmatia;Mohammadpur;Dhaka;1207;Bangladesh
+ADR;TYPE=WORK:;;5/4 (2nd Floor), Block A, Road 5, Lalmatia;Mohammadpur;Dhaka;1207;Bangladesh
 END:VCARD`;
 
       const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8;' });

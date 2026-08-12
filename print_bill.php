@@ -200,7 +200,7 @@ try {
         <!-- ═══ FOOTER ═══ -->
         <div class="bg-brand-blue text-white px-10 py-4 flex justify-between items-center text-[11px]">
             <div class="flex items-center gap-5">
-                <span><i class="fas fa-location-dot text-brand-orange mr-1.5"></i>5/2 BlockA, Lalmatia, Dhaka</span>
+                <span><i class="fas fa-location-dot text-brand-orange mr-1.5"></i>5/4 BlockA, Lalmatia, Dhaka</span>
                 <span><i class="fas fa-phone text-brand-orange mr-1.5"></i>+880 1712-718527</span>
                 <span><i class="fas fa-envelope text-brand-orange mr-1.5"></i>mamunddcbdc@gmail.com</span>
             </div>

@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/assets.php'; ?>
 <!-- Developer Credit Bar -->
 <div class="bg-[#080B14] border-t border-[#1e293b] px-6 py-3 flex items-center justify-between flex-shrink-0 mt-auto">
     <p class="text-[10px] text-gray-500 font-medium">&copy; <?= date('Y') ?> Mamun's Ortho Dental. Crafted with care.</p>
@@ -358,7 +359,7 @@ function setModTime(idOrEl, value) {
 }
 </script>
 
-<script src="assets/js/main.js"></script>
-<script src="assets/js/charts.js"></script>
+<script src="<?= asset('assets/js/main.js') ?>"></script>
+<script src="<?= asset('assets/js/charts.js') ?>"></script>
 </body>
 </html>

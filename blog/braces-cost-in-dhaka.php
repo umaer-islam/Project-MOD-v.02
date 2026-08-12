@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../components/assets.php';
 $page_title = "Braces Cost in Dhaka 2026 Complete Price Guide";
 $page_desc = "How much do braces cost in Dhaka, Bangladesh? Complete 2026 price guide for metal braces, ceramic braces & clear aligners. Compare costs at Mamun's Ortho Dental, Lalmatia.";
 $page_canonical = "https://mamunorthodental.com/blog/braces-cost-in-dhaka.php";
@@ -32,7 +33,7 @@ $page_canonical = "https://mamunorthodental.com/blog/braces-cost-in-dhaka.php";
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="../assets/css/landing.css">
+<link rel="stylesheet" href="<?= asset('../assets/css/landing.css') ?>">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{navy:'#004591','navy-dark':'#003070',gold:'#ea741b'},fontFamily:{serif:['"Playfair Display"','serif'],sans:['"Outfit"','sans-serif']}}}}</script>
 <script type="application/ld+json">
@@ -60,7 +61,7 @@ $page_canonical = "https://mamunorthodental.com/blog/braces-cost-in-dhaka.php";
       "name": "How much do braces cost in Dhaka?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Braces cost in Dhaka ranges from ৳30,000 to ৳60,000 for metal braces, ৳45,000 to ৳80,000 for ceramic braces, and ৳80,000 to ৳1,50,000 for clear aligners."
+        "text": "Braces cost in Dhaka ranges from ৳60,000 to ৳1,40,000 for metal braces, ৳80,000 to ৳1,60,000 for ceramic braces, and ৳1,20,000 to ৳2,20,000 for clear aligners."
       }
     },
     {
@@ -125,17 +126,17 @@ $page_canonical = "https://mamunorthodental.com/blog/braces-cost-in-dhaka.php";
         <h2 class="font-serif text-2xl font-bold text-[#004591]">Braces Cost Comparison in Dhaka (2026)</h2>
         <!-- AEO Answer Snippet -->
         <div class="bg-amber-50/50 border-l-4 border-[#ea741b] p-4 rounded-r-xl my-4 text-sm font-medium text-gray-700 leading-relaxed not-prose">
-          <strong>Quick Summary:</strong> In 2026, the average cost of braces in Dhaka is: Metal braces range from ৳30,000 to ৳60,000, Ceramic braces from ৳45,000 to ৳80,000, Self-Ligating braces from ৳50,000 to ৳90,000, and Clear Aligners from ৳80,000 to ৳1,50,000. Prices depend on case severity and duration.
+          <strong>Quick Summary:</strong> In 2026, the average cost of braces in Dhaka is: Metal braces range from ৳60,000 to ৳1,40,000, Ceramic braces from ৳80,000 to ৳1,60,000, Self-Ligating braces from ৳80,000 to ৳1,60,000, and Clear Aligners from ৳1,20,000 to ৳2,20,000. Prices depend on case severity and duration.
         </div>
         
         <div class="not-prose overflow-x-auto mb-8">
           <table class="w-full text-sm border-collapse">
             <thead><tr class="bg-[#004591] text-white"><th class="px-4 py-3 text-left rounded-tl-xl">Type</th><th class="px-4 py-3 text-left">Price Range (BDT)</th><th class="px-4 py-3 text-left">Duration</th><th class="px-4 py-3 text-left rounded-tr-xl">Best For</th></tr></thead>
             <tbody>
-              <tr class="border-b border-gray-100"><td class="px-4 py-3 font-semibold text-[#004591]">Metal Braces</td><td class="px-4 py-3"> taka 30,000 taka 60,000</td><td class="px-4 py-3">12–24 months</td><td class="px-4 py-3">Most cases, budget-friendly</td></tr>
-              <tr class="border-b border-gray-100 bg-gray-50"><td class="px-4 py-3 font-semibold text-[#004591]">Ceramic Braces</td><td class="px-4 py-3">taka 45,000 taka 80,000</td><td class="px-4 py-3">12–24 months</td><td class="px-4 py-3">Adults wanting discretion</td></tr>
-              <tr class="border-b border-gray-100"><td class="px-4 py-3 font-semibold text-[#004591]">Self-Ligating</td><td class="px-4 py-3">taka 50,000 taka 90,000</td><td class="px-4 py-3">10–20 months</td><td class="px-4 py-3">Faster results</td></tr>
-              <tr class="bg-gray-50"><td class="px-4 py-3 font-semibold text-[#004591]">Clear Aligners</td><td class="px-4 py-3">taka 80,000 taka 1,50,000</td><td class="px-4 py-3">6–18 months</td><td class="px-4 py-3">Mild to moderate cases</td></tr>
+              <tr class="border-b border-gray-100"><td class="px-4 py-3 font-semibold text-[#004591]">Metal Braces</td><td class="px-4 py-3">৳60,000 – ৳1,40,000</td><td class="px-4 py-3">12–24 months</td><td class="px-4 py-3">Most cases, budget-friendly</td></tr>
+              <tr class="border-b border-gray-100 bg-gray-50"><td class="px-4 py-3 font-semibold text-[#004591]">Ceramic Braces</td><td class="px-4 py-3">৳80,000 – ৳1,60,000</td><td class="px-4 py-3">12–24 months</td><td class="px-4 py-3">Adults wanting discretion</td></tr>
+              <tr class="border-b border-gray-100"><td class="px-4 py-3 font-semibold text-[#004591]">Self-Ligating</td><td class="px-4 py-3">৳80,000 – ৳1,60,000</td><td class="px-4 py-3">10–20 months</td><td class="px-4 py-3">Faster results</td></tr>
+              <tr class="bg-gray-50"><td class="px-4 py-3 font-semibold text-[#004591]">Clear Aligners</td><td class="px-4 py-3">৳1,20,000 – ৳2,20,000</td><td class="px-4 py-3">6–18 months</td><td class="px-4 py-3">Mild to moderate cases</td></tr>
             </tbody>
           </table>
         </div>

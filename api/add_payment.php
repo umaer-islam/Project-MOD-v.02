@@ -3,6 +3,7 @@ session_start();
 require_once '../components/auth_guard.php';
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/cache.php';
 restrict_access(['admin', 'doctor', 'receptionist']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -28,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         log_activity($pdo, 'ADD_PAYMENT', "Recorded payment of ৳{$amount} ({$payment_method}) for {$pName}");
         
         header("Location: ../payments.php?success=Payment+recorded");
+        cache_flush('dash:');
         exit;
 
     } catch (PDOException) {

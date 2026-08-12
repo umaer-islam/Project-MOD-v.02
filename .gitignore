@@ -1,0 +1,16 @@
+# Cache files
+cache/
+
+# Sensitive files
+database/connection.php
+.env
+*.log
+error_log
+
+# User uploads (large files, deploy separately)
+uploads/*
+!uploads/.gitkeep
+
+# IDE
+.vscode/
+.idea/

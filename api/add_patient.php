@@ -3,6 +3,8 @@ session_start();
 require_once '../components/auth_guard.php';
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/cache.php';
+require_once '../components/patient_id_generator.php';
 require_once 'generate_qr.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -21,35 +23,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
-        // Count for generating MOD-XXXX ID
-        $stmt = $pdo->query("SELECT MAX(id) FROM patients FOR UPDATE");
-        $count = $stmt->fetchColumn() + 1;
-        $patient_id = 'MOD-' . str_pad($count, 4, '0', STR_PAD_LEFT);
+        // Generate unique MOD-XXXX patient ID
+        $patient_id = get_next_patient_id($pdo);
 
-        // Insert Patient
-        $insert = $pdo->prepare("INSERT INTO patients (patient_id, name, phone, age, gender, address, notes) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $insert->execute([$patient_id, $name, $phone, $age, $gender, $address, $notes]);
+        // Generate secure access token for patient portal
+        $access_token = generate_access_token();
+
+        // Insert Patient with access token
+        $insert = $pdo->prepare("INSERT INTO patients (patient_id, name, phone, age, gender, address, notes, access_token) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $insert->execute([$patient_id, $name, $phone, $age, $gender, $address, $notes, $access_token]);
         $db_id = $pdo->lastInsertId();
 
-        // Generate QR code (Token based secure access link)
-        $token = bin2hex(random_bytes(16));
-        $portal_url = "https://mamunorthodental.com/patient_record.php?pid={$patient_id}&token={$token}";
-        
-        // Use external service to generate QR or just store the link if library is missing
-        // For local development, we'll assume a dummy or Google API QR URL
+        // Generate QR code linking to patient portal with token
+        $portal_url = "https://mamunorthodental.com/patient_record.php?pid={$patient_id}&token={$access_token}";
         $qr_url = generateQR($portal_url, $patient_id);
-        
-        // In a real app we'd update the patient record with token/qr_path here
-        
+
+        // Update patient record with QR code path
+        if ($qr_url) {
+            $updateQr = $pdo->prepare("UPDATE patients SET qr_code_path = ? WHERE id = ?");
+            $updateQr->execute([$qr_url, $db_id]);
+        }
+
         $pdo->commit();
 
         log_activity($pdo, 'ADD_PATIENT', "Added new patient: {$name} (ID: {$patient_id}, Phone: {$phone})");
-        
+
         header("Location: ../patients.php?success=Patient+added");
+        cache_flush('dash:');
         exit;
 
-    } catch (PDOException) {
+    } catch (PDOException $e) {
         $pdo->rollBack();
+        error_log('[ADD_PATIENT FAILED] ' . $e->getMessage());
         header("Location: ../patients.php?error=" . urlencode("A database error occurred. Please try again."));
         exit;
     }
@@ -57,4 +62,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: ../patients.php");
     exit;
 }
-
+?>

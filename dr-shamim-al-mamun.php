@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'database/connection.php';
+require_once 'components/assets.php';
 ?>
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
@@ -9,8 +10,8 @@ require_once 'database/connection.php';
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- PRIMARY SEO META -->
-<title>Best Dental Clinic in Dhaka | Dr. Shamim Al Mamun</title>
-<meta name="description" content="Dr. Mohammad Shamim Al Mamun — Best dental clinic in Dhaka. FCPS (Orthodontics), BDS. 20+ years experience, 600+ orthodontic cases. Book appointment at Lalmatia clinic.">
+<title>Dr. Mohammad Shamim Al Mamun | Best Orthodontist in Dhaka | FCPS, BDS | Mamun's Ortho Dental</title>
+<meta name="description" content="Dr. Mohammad Shamim Al Mamun is a leading Consultant Orthodontist in Dhaka, Bangladesh. FCPS (Orthodontics), BDS (Dhaka Dental College). Associate Professor at Bangladesh Dental College. 20+ years experience, 600+ orthodontic cases. Book appointment at Lalmatia clinic.">
 <meta name="keywords" content="dr shamim al mamun, best orthodontist dhaka, orthodontist lalmatia, braces specialist bangladesh, fcps orthodontics dhaka, dentofacial orthopedics, consultant orthodontist dhaka, dental implant specialist">
 <meta name="author" content="Dr. Mohammad Shamim Al Mamun">
 <meta name="developer" content="Umaer Islam — Web Developer & Designer — https://umaerislam.com">
@@ -26,7 +27,7 @@ require_once 'database/connection.php';
 
 <!-- OPEN GRAPH -->
 <meta property="og:type" content="profile">
-<meta property="og:title" content="Dr. Mohammad Shamim Al Mamun — Best Orthodontist in Dhaka">
+<meta property="og:title" content="Dr. Mohammad Shamim Al Mamun | Best Orthodontist in Dhaka">
 <meta property="og:description" content="Consultant Orthodontist with FCPS & BDS. 20+ years experience, 600+ orthodontic cases. Associate Professor, Bangladesh Dental College.">
 <meta property="og:url" content="https://mamunorthodental.com/dr-shamim-al-mamun.php">
 <meta property="og:image" content="https://mamunorthodental.com/Logo.png">
@@ -35,7 +36,7 @@ require_once 'database/connection.php';
 
 <!-- TWITTER -->
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Dr. Shamim Al Mamun — Best Orthodontist in Dhaka">
+<meta name="twitter:title" content="Dr. Shamim Al Mamun | Best Orthodontist in Dhaka">
 <meta name="twitter:description" content="FCPS Orthodontics | BDS | 20+ Years | 600+ Ortho Cases | Lalmatia, Dhaka">
 
 <!-- FAVICON -->
@@ -50,7 +51,7 @@ require_once 'database/connection.php';
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="assets/css/landing.css">
+<link rel="stylesheet" href="<?= asset('assets/css/landing.css') ?>">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = { theme: { extend: {
@@ -94,7 +95,7 @@ tailwind.config = { theme: { extend: {
   },
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "5/2 (2nd Floor), Block A, Road 5, Lalmatia",
+    "streetAddress": "5/4 (2nd Floor), Block A, Road 5, Lalmatia",
     "addressLocality": "Mohammadpur",
     "addressRegion": "Dhaka",
     "postalCode": "1207",
@@ -169,7 +170,7 @@ tailwind.config = { theme: { extend: {
         <div class="gold-bar mb-4"></div>
         <p class="text-[#ea741b] text-[11px] font-bold uppercase tracking-[.3em] mb-2">Consultant Orthodontist & Dentofacial Orthopedics Specialist</p>
         <h1 class="font-serif text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">Dr. Mohammad Shamim<br>Al Mamun</h1>
-        <p class="text-white/50 text-sm mb-6">BDS (Dhaka Dental College) · FCPS (Orthodontics, BCPS) · Special Training in Implantology</p>
+        <p class="text-white/50 text-sm mb-6">BDS (Dhaka Dental College) | FCPS (Orthodontics, BCPS) | Special Training in Implantology</p>
 
         <!-- Quick Stats -->
         <div class="flex flex-wrap gap-4 mb-8">
@@ -207,33 +208,33 @@ tailwind.config = { theme: { extend: {
         
         <p><strong>Dr. Mohammad Shamim Al Mamun</strong> is one of the most experienced and trusted <strong>orthodontists in Dhaka, Bangladesh</strong>. With over <strong>20 years of clinical experience</strong> in orthodontics and dentofacial orthopedics, he has successfully treated more than <strong>600 orthodontic patients</strong> and contributed to the dental health of over <strong>15,000 patients</strong> across Dhaka.</p>
 
-        <p>Dr. Mamun earned his <strong>Bachelor of Dental Surgery (BDS)</strong> from the prestigious <strong>Dhaka Dental College</strong> and went on to complete his <strong>FCPS in Orthodontics</strong> from the <strong>Bangladesh College of Physicians and Surgeons (BCPS)</strong> — the highest postgraduate medical qualification in Bangladesh. He also holds specialized training in <strong>Implantology</strong>.</p>
+        <p>Dr. Mamun earned his <strong>Bachelor of Dental Surgery (BDS)</strong> from the prestigious <strong>Dhaka Dental College</strong> and went on to complete his <strong>FCPS in Orthodontics</strong> from the <strong>Bangladesh College of Physicians and Surgeons (BCPS)</strong> the highest postgraduate medical qualification in Bangladesh. He also holds specialized training in <strong>Implantology</strong>.</p>
 
         <h3 class="font-serif text-xl font-bold text-[#004591] !mt-8">Academic & Professional Positions</h3>
         <ul class="space-y-2">
-          <li><strong>Associate Professor & Head</strong>, Department of Orthodontics — <em>Bangladesh Dental College</em></li>
-          <li><strong>Consultant Orthodontist</strong> — <em>Labaid Hospital, Dhanmondi, Dhaka</em></li>
-          <li><strong>Founder & Lead Orthodontist</strong> — <em>Mamun's Ortho Dental, Lalmatia</em></li>
+          <li><strong>Associate Professor & Head</strong>, Department of Orthodontics  <em>Bangladesh Dental College</em></li>
+          <li><strong>Consultant Orthodontist</strong>  <em>Labaid Hospital, Dhanmondi, Dhaka</em></li>
+          <li><strong>Founder & Lead Orthodontist</strong>  <em>Mamun's Ortho Dental, Lalmatia</em></li>
         </ul>
 
         <h3 class="font-serif text-xl font-bold text-[#004591] !mt-8">Areas of Expertise</h3>
-        <p>Dr. Mamun specializes in <strong>Dentofacial Orthopedics</strong> — the science of correcting both tooth alignment and jaw development. His clinical focus includes:</p>
+        <p>Dr. Mamun specializes in <strong>Dentofacial Orthopedics</strong>  the science of correcting both tooth alignment and jaw development. His clinical focus includes:</p>
         <ul class="space-y-1">
-          <li><strong>Orthodontic Braces</strong> — Metal, ceramic, and self-ligating bracket systems</li>
-          <li><strong>Clear Aligner Therapy</strong> — Virtually invisible removable aligners</li>
-          <li><strong>Removable Orthodontic Appliances</strong> — Functional and corrective devices</li>
-          <li><strong>Dental Implant Planning</strong> — Surgical and prosthetic implant solutions</li>
-          <li><strong>Complex Bite Correction</strong> — Overbite, underbite, crossbite, and open bite treatment</li>
+          <li><strong>Orthodontic Braces</strong>  Metal, ceramic, and self-ligating bracket systems</li>
+          <li><strong>Clear Aligner Therapy</strong>  Virtually invisible removable aligners</li>
+          <li><strong>Removable Orthodontic Appliances</strong>  Functional and corrective devices</li>
+          <li><strong>Dental Implant Planning</strong>  Surgical and prosthetic implant solutions</li>
+          <li><strong>Complex Bite Correction</strong>  Overbite, underbite, crossbite, and open bite treatment</li>
         </ul>
 
         <h3 class="font-serif text-xl font-bold text-[#004591] !mt-8">Why Patients Choose Dr. Mamun</h3>
-        <p>Patients from across Dhaka — including <strong>Lalmatia</strong>, <strong>Mohammadpur</strong>, <strong>Dhanmondi</strong>, <strong>Mirpur</strong>, <strong>Uttara</strong>, and <strong>Gulshan</strong> — seek Dr. Mamun's expertise for his combination of academic rigor, gentle chairside manner, and consistently excellent treatment outcomes. His clinic in <strong>Lalmatia</strong> is equipped with modern digital imaging, strict WHO-standard sterilisation, and a comfortable, family-friendly environment.</p>
+        <p>Patients from across Dhaka including <strong>Lalmatia</strong>, <strong>Mohammadpur</strong>, <strong>Dhanmondi</strong>, <strong>Mirpur</strong>, <strong>Uttara</strong>, and <strong>Gulshan</strong>  seek Dr. Mamun's expertise for his combination of academic rigor, gentle chairside manner, and consistently excellent treatment outcomes. His clinic in <strong>Lalmatia</strong> is equipped with modern digital imaging, strict WHO-standard sterilisation, and a comfortable, family-friendly environment.</p>
 
         <h3 class="font-serif text-xl font-bold text-[#004591] !mt-8">Frequently Asked Questions</h3>
         
         <div class="space-y-4 not-prose">
           <?php foreach([
-            ['Where is Dr. Shamim Al Mamun\'s clinic located?', 'Dr. Mamun\'s clinic — Mamun\'s Ortho Dental — is located at 5/2 (2nd Floor), Block A, Road 5, Lalmatia, Mohammadpur, Dhaka-1207, Bangladesh. It is open Saturday to Thursday, 9 AM to 9 PM.'],
+            ['Where is Dr. Shamim Al Mamun\'s clinic located?', 'Dr. Mamun\'s clinic — Mamun\'s Ortho Dental — is located at 5/4 (2nd Floor), Block A, Road 5, Lalmatia, Mohammadpur, Dhaka-1207, Bangladesh. It is open Saturday to Thursday, 9 AM to 9 PM.'],
             ['What are Dr. Mamun\'s qualifications?', 'Dr. Mamun holds a BDS from Dhaka Dental College and FCPS in Orthodontics from BCPS. He is also specially trained in Implantology and serves as Associate Professor at Bangladesh Dental College.'],
             ['How much does braces treatment cost with Dr. Mamun?', 'Braces treatment cost varies depending on the type (metal, ceramic, or clear aligners) and complexity of the case. Please contact the clinic directly for a personalised consultation and quote.'],
             ['Does Dr. Mamun treat children for orthodontics?', 'Yes. Dr. Mamun treats orthodontic patients of all ages, including children as young as 7 years old. Early intervention can prevent more complex issues later.'],
@@ -275,7 +276,7 @@ tailwind.config = { theme: { extend: {
         <div class="bg-[#004591] text-white rounded-2xl p-6">
           <h3 class="font-bold text-sm uppercase tracking-widest mb-4 text-white/60">Visit the Clinic</h3>
           <div class="space-y-3 text-sm">
-            <p class="flex items-start gap-2"><i class="fas fa-map-marker-alt text-[#ea741b] mt-0.5 text-xs w-4"></i> 5/2 (2nd Floor), Block A, Road 5, Lalmatia, Mohammadpur, Dhaka-1207</p>
+            <p class="flex items-start gap-2"><i class="fas fa-map-marker-alt text-[#ea741b] mt-0.5 text-xs w-4"></i> 5/4 (2nd Floor), Block A, Road 5, Lalmatia, Mohammadpur, Dhaka-1207</p>
             <p class="flex items-center gap-2"><i class="fas fa-clock text-[#ea741b] text-xs w-4"></i> Sat-Thu, 9 AM - 9 PM</p>
             <p class="flex items-center gap-2"><i class="fas fa-phone text-[#ea741b] text-xs w-4"></i> +880 1712-718527</p>
             <p class="flex items-center gap-2"><i class="fab fa-whatsapp text-[#25d366] text-xs w-4"></i> <a href="https://wa.me/8801712718527" target="_blank" class="hover:text-[#25d366] transition-colors">WhatsApp Us</a></p>
@@ -319,4 +320,11 @@ tailwind.config = { theme: { extend: {
   <div class="max-w-6xl mx-auto px-5 text-center">
     <a href="index.php" class="inline-flex items-center gap-3 mb-4">
       <img src="Logo.png" alt="Mamun's Ortho Dental Logo" class="w-8 h-8 object-contain">
-      <span class="text-white font-serif text-lg font-bold">Mamun's <span class="text-[#ea741b]">Ortho</span> De
+      <span class="text-white font-serif text-lg font-bold">Mamun's <span class="text-[#ea741b]">Ortho</span> Dental</span>
+    </a>
+    <p class="text-white/25 text-xs">&copy; <?=date('Y')?> Mamun's Ortho Dental. All rights reserved. | Lalmatia, Mohammadpur, Dhaka-1207</p>
+  </div>
+</footer>
+
+</body>
+</html>

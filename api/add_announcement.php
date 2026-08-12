@@ -3,6 +3,7 @@ session_start();
 require_once '../components/auth_guard.php';
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/cache.php';
 restrict_access(['admin']);
 
 
@@ -21,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("INSERT INTO announcements (title, description, date_posted, expiry_date, visibility) VALUES (?, ?, CURDATE(), ?, ?)");
         $stmt->execute([$title, $description, $expiry_date, $visibility]);
         log_activity($pdo, 'ADD_ANNOUNCEMENT', "Published announcement: {$title} (Visibility: {$visibility})");
+        cache_forget('pub:announcements');
         header("Location: ../announcements.php?success=Announcement+published");
         exit;
     } catch (PDOException) {

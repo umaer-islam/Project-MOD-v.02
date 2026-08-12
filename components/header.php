@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/auth_guard.php';
+require_once __DIR__ . '/assets.php';
 ?>
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
@@ -48,7 +49,7 @@ require_once __DIR__ . '/auth_guard.php';
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="<?= asset('assets/css/style.css') ?>">
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

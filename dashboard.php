@@ -3,6 +3,7 @@ require_once 'components/header.php';
 require_once 'components/sidebar.php';
 require_once 'components/topbar.php';
 require_once 'database/connection.php';
+require_once 'components/cache.php';
 
 // ── Safe DB queries ─────────────────────────────────────────────────────────
 $todayPatients = 0; $totalPatients = 0; $paymentsThisWeek = 0; $pendingFollowups = 0;
@@ -16,54 +17,61 @@ $db_connected = ($pdo !== null);
 
 if ($db_connected) {
     try {
-        // ── Core KPIs ──
-        $todayPatients    = $pdo->query("SELECT COUNT(*) FROM appointments WHERE appointment_date = CURDATE() AND status != 'Cancelled'")->fetchColumn() ?: 0;
-        $totalPatients    = $pdo->query("SELECT COUNT(*) FROM patients")->fetchColumn() ?: 0;
-        $paymentsThisWeek = $pdo->query("SELECT COALESCE(SUM(amount),0) FROM payments WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)")->fetchColumn() ?: 0;
+        // ── Core KPIs (cached 60s) ──
+        $todayPatients    = cache_remember('dash:today_patients', 60, fn() => $pdo->query("SELECT COUNT(*) FROM appointments WHERE appointment_date = CURDATE() AND status != 'Cancelled'")->fetchColumn() ?: 0);
+        $totalPatients    = cache_remember('dash:total_patients', 120, fn() => $pdo->query("SELECT COUNT(*) FROM patients")->fetchColumn() ?: 0);
+        $paymentsThisWeek = cache_remember('dash:payments_week', 60, fn() => $pdo->query("SELECT COALESCE(SUM(amount),0) FROM payments WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)")->fetchColumn() ?: 0);
         $pendingFollowups = 0;
-        $newMessages      = $pdo->query("SELECT COUNT(*) FROM contact_inquiries WHERE status = 'unread'")->fetchColumn() ?: 0;
-        $pendingReviews   = $pdo->query("SELECT COUNT(*) FROM testimonials WHERE status = 'Pending'")->fetchColumn() ?: 0;
+        $newMessages      = cache_remember('dash:unread_msgs', 30, fn() => $pdo->query("SELECT COUNT(*) FROM contact_inquiries WHERE status = 'unread'")->fetchColumn() ?: 0);
+        $pendingReviews   = cache_remember('dash:pending_reviews', 60, fn() => $pdo->query("SELECT COUNT(*) FROM testimonials WHERE status = 'Pending'")->fetchColumn() ?: 0);
 
         // ── Revenue Comparison (This Month vs Last Month) ──
-        $monthlyRevenue   = $pdo->query("SELECT COALESCE(SUM(amount),0) FROM payments WHERE MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())")->fetchColumn() ?: 0;
-        $lastMonthRevenue = $pdo->query("SELECT COALESCE(SUM(amount),0) FROM payments WHERE MONTH(created_at) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AND YEAR(created_at) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))")->fetchColumn() ?: 0;
+        $monthlyRevenue   = cache_remember('dash:monthly_rev', 120, fn() => $pdo->query("SELECT COALESCE(SUM(amount),0) FROM payments WHERE MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())")->fetchColumn() ?: 0);
+        $lastMonthRevenue = cache_remember('dash:last_month_rev', 120, fn() => $pdo->query("SELECT COALESCE(SUM(amount),0) FROM payments WHERE MONTH(created_at) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AND YEAR(created_at) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))")->fetchColumn() ?: 0);
 
         // ── Patient Gender Distribution ──
-        $genderMale   = $pdo->query("SELECT COUNT(*) FROM patients WHERE gender = 'Male'")->fetchColumn() ?: 0;
-        $genderFemale = $pdo->query("SELECT COUNT(*) FROM patients WHERE gender = 'Female'")->fetchColumn() ?: 0;
-        $genderOther  = $pdo->query("SELECT COUNT(*) FROM patients WHERE gender NOT IN ('Male','Female') OR gender IS NULL")->fetchColumn() ?: 0;
+        $genderMale   = cache_remember('dash:gender_male', 300, fn() => $pdo->query("SELECT COUNT(*) FROM patients WHERE gender = 'Male'")->fetchColumn() ?: 0);
+        $genderFemale = cache_remember('dash:gender_female', 300, fn() => $pdo->query("SELECT COUNT(*) FROM patients WHERE gender = 'Female'")->fetchColumn() ?: 0);
+        $genderOther  = cache_remember('dash:gender_other', 300, fn() => $pdo->query("SELECT COUNT(*) FROM patients WHERE gender NOT IN ('Male','Female') OR gender IS NULL")->fetchColumn() ?: 0);
 
         // ── Revenue Last 6 Months ──
+        $revenueData = cache_remember('dash:revenue_6mo', 300, function () use ($pdo) {
+            $data = [];
+            for ($i = 5; $i >= 0; $i--) {
+                $m = date('Y-m', strtotime("-$i months"));
+                $rev = $pdo->query("SELECT COALESCE(SUM(amount),0) FROM payments WHERE YEAR(created_at) = YEAR('{$m}-01') AND MONTH(created_at) = MONTH('{$m}-01')")->fetchColumn() ?: 0;
+                $data[] = (int)$rev;
+            }
+            return $data;
+        });
+        $revenueLabels = [];
         for ($i = 5; $i >= 0; $i--) {
-            $m = date('Y-m', strtotime("-$i months"));
-            $revenueLabels[] = date('M', strtotime($m));
-            $rev = $pdo->query("SELECT COALESCE(SUM(amount),0) FROM payments WHERE YEAR(created_at) = YEAR('{$m}-01') AND MONTH(created_at) = MONTH('{$m}-01')")->fetchColumn() ?: 0;
-            $revenueData[] = (int)$rev;
+            $revenueLabels[] = date('M', strtotime("-$i months"));
         }
 
-        // ── Recent Patients ──
-        $recentPatients = $pdo->query("SELECT name, patient_id, created_at FROM patients ORDER BY created_at DESC LIMIT 5")->fetchAll();
+        // ── Recent Patients (cached 60s) ──
+        $recentPatients = cache_remember('dash:recent_patients', 60, fn() => $pdo->query("SELECT name, patient_id, created_at FROM patients ORDER BY created_at DESC LIMIT 5")->fetchAll());
 
-        // ── Today's Appointments ──
-        $todayAppointments = $pdo->query(
+        // ── Today's Appointments (cached 30s) ──
+        $todayAppointments = cache_remember('dash:today_apts', 30, fn() => $pdo->query(
             "SELECT a.appointment_time, a.status, p.name as patient_name FROM appointments a 
              JOIN patients p ON a.patient_id = p.id 
              WHERE a.appointment_date = CURDATE() ORDER BY a.appointment_time ASC LIMIT 8"
-        )->fetchAll();
+        )->fetchAll());
 
-        // ── Upcoming Appointments (Next 3 days) ──
-        $upcomingAppointments = $pdo->query(
+        // ── Upcoming Appointments (Next 3 days, cached 60s) ──
+        $upcomingAppointments = cache_remember('dash:upcoming_apts', 60, fn() => $pdo->query(
             "SELECT a.appointment_date, a.appointment_time, a.status, p.name as patient_name 
              FROM appointments a JOIN patients p ON a.patient_id = p.id 
              WHERE a.appointment_date > CURDATE() AND a.appointment_date <= DATE_ADD(CURDATE(), INTERVAL 3 DAY) 
              AND a.status != 'Cancelled' ORDER BY a.appointment_date ASC, a.appointment_time ASC LIMIT 6"
-        )->fetchAll();
+        )->fetchAll());
 
-        // ── Active Notices ──
-        $activeNotices = $pdo->query(
+        // ── Active Notices (cached 300s) ──
+        $activeNotices = cache_remember('dash:notices', 300, fn() => $pdo->query(
             "SELECT title, description FROM announcements 
              WHERE (expiry_date IS NULL OR expiry_date >= CURDATE()) ORDER BY date_posted DESC LIMIT 3"
-        )->fetchAll();
+        )->fetchAll());
 
 
 

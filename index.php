@@ -2,6 +2,8 @@
 session_start();
 require_once 'database/connection.php';
 require_once 'components/activity_logger.php';
+require_once 'components/assets.php';
+require_once 'components/cache.php';
 
 //  Contact Form Handler 
 $contact_success = false;
@@ -46,14 +48,14 @@ if ($pdo) {
     }
 }
 
-// Data fetching 
+// Data fetching — cached for 5 minutes (public data rarely changes)
 $announcements = $services_list = $testimonials = $gallery_images = $cases = [];
 if ($pdo) {
-    try { $announcements  = $pdo->query("SELECT title,description FROM announcements WHERE visibility='Public' AND (expiry_date IS NULL OR expiry_date>=CURDATE()) ORDER BY date_posted DESC LIMIT 3")->fetchAll(); } catch(Exception $e){}
-    try { $services_list  = $pdo->query("SELECT name,description,icon FROM services WHERE status='Active' ORDER BY created_at ASC LIMIT 10")->fetchAll(); } catch(Exception $e){}
-    try { $testimonials   = $pdo->query("SELECT patient_name as name,location as loc,stars,review as text FROM testimonials WHERE status='Published' ORDER BY created_at DESC LIMIT 6")->fetchAll(); } catch(Exception $e){}
-    try { $gallery_images = $pdo->query("SELECT * FROM gallery ORDER BY sort_order ASC, created_at DESC LIMIT 12")->fetchAll(); } catch(Exception $e){}
-    try { $cases          = $pdo->query("SELECT * FROM before_after_cases ORDER BY created_at DESC LIMIT 6")->fetchAll(); } catch(Exception $e){}
+    try { $announcements  = cache_remember('pub:announcements', 300, fn() => $pdo->query("SELECT title,description FROM announcements WHERE visibility='Public' AND (expiry_date IS NULL OR expiry_date>=CURDATE()) ORDER BY date_posted DESC LIMIT 3")->fetchAll()); } catch(Exception $e){}
+    try { $services_list  = cache_remember('pub:services', 300, fn() => $pdo->query("SELECT name,description,icon FROM services WHERE status='Active' ORDER BY created_at ASC LIMIT 10")->fetchAll()); } catch(Exception $e){}
+    try { $testimonials   = cache_remember('pub:testimonials', 300, fn() => $pdo->query("SELECT patient_name as name,location as loc,stars,review as text FROM testimonials WHERE status='Published' ORDER BY created_at DESC LIMIT 6")->fetchAll()); } catch(Exception $e){}
+    try { $gallery_images = cache_remember('pub:gallery', 300, fn() => $pdo->query("SELECT * FROM gallery ORDER BY sort_order ASC, created_at DESC LIMIT 12")->fetchAll()); } catch(Exception $e){}
+    try { $cases          = cache_remember('pub:cases', 300, fn() => $pdo->query("SELECT * FROM before_after_cases ORDER BY created_at DESC LIMIT 6")->fetchAll()); } catch(Exception $e){}
 }
 
 // Fallback data
@@ -167,8 +169,8 @@ if (empty($testimonials)) $testimonials = [
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" as="style">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="assets/css/landing.css">
-<link rel="stylesheet" href="assets/css/loader.css">
+<link rel="stylesheet" href="<?= asset('assets/css/landing.css') ?>">
+<link rel="stylesheet" href="<?= asset('assets/css/loader.css') ?>">
 
 <!--  TAILWIND CONFIG  -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -201,7 +203,7 @@ tailwind.config = { theme: { extend: {
       "hasMap": "https://maps.app.goo.gl/MJg2zb1qWj8xq2Uq6",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "5/2 (2nd Floor), Block A, Road 5, Lalmatia",
+        "streetAddress": "5/4 (2nd Floor), Block A, Road 5, Lalmatia",
         "addressLocality": "Dhaka",
         "addressRegion": "Dhaka Division",
         "postalCode": "1207",
@@ -288,7 +290,7 @@ tailwind.config = { theme: { extend: {
       "worksFor": {"@id": "https://mamunorthodental.com/#clinic"},
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "5/2 (2nd Floor), Block A, Road 5, Lalmatia",
+        "streetAddress": "5/4 (2nd Floor), Block A, Road 5, Lalmatia",
         "addressLocality": "Dhaka",
         "postalCode": "1207",
         "addressCountry": "BD"
@@ -300,7 +302,7 @@ tailwind.config = { theme: { extend: {
       "mainEntity": [
         {"@type": "Question", "name": "What age groups does Mamun's Ortho Dental treat?", "acceptedAnswer": {"@type": "Answer", "text": "We welcome patients of all ages — children (from age 3), teenagers, adults, and seniors. Our clinic provides pediatric dentistry, orthodontic braces for teens and adults, and dental care for men, women, and families."}},
         {"@type": "Question", "name": "What are the clinic opening hours?", "acceptedAnswer": {"@type": "Answer", "text": "Saturday to Thursday, 9:00 AM to 9:00 PM. Closed on Fridays."}},
-        {"@type": "Question", "name": "Where is the clinic located?", "acceptedAnswer": {"@type": "Answer", "text": "5/2 (2nd Floor), Block A, Road 5, Lalmatia, Dhaka-1207. Accessible from Mohammadpur, Dhanmondi, Mirpur and surrounding areas."}},
+        {"@type": "Question", "name": "Where is the clinic located?", "acceptedAnswer": {"@type": "Answer", "text": "5/4 (2nd Floor), Block A, Road 5, Lalmatia, Dhaka-1207. Accessible from Mohammadpur, Dhanmondi, Mirpur and surrounding areas."}},
         {"@type": "Question", "name": "What types of braces are available?", "acceptedAnswer": {"@type": "Answer", "text": "Metal braces, ceramic braces, and invisible/clear aligners for children and adults."}},
         {"@type": "Question", "name": "How to book an appointment?", "acceptedAnswer": {"@type": "Answer", "text": "Call or WhatsApp +880 1712-718527, email mamunddcbdc@gmail.com, or use the online booking form. Walk-ins are also welcome during clinic hours."}},
         {"@type": "Question", "name": "What is the cost of braces in Dhaka?", "acceptedAnswer": {"@type": "Answer", "text": "The cost of orthodontic braces in Dhaka, Bangladesh typically ranges from ৳30,000 to ৳60,000 for metal braces, and ৳45,000 to ৳80,000 for ceramic braces. Clear aligners cost between ৳80,000 and ৳1,50,000 depending on the complexity of the alignment."}},
@@ -450,7 +452,7 @@ tailwind.config = { theme: { extend: {
         </div>
       </a>
       <div class="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
-        <?php foreach([['#about','About'],['#services','Services'],['#gallery','Gallery'],['#doctors','Doctors'],['#testimonials','Reviews'],['#beforeafter','Before & After'],['#contact','Contact']] as [$h,$l]): ?>
+        <?php foreach([['#about','About'],['#services','Services'],['#gallery','Gallery'],['#doctors','Doctors'],['#testimonials','Reviews'],['#beforeafter','Before & After'],['#track','Track'],['#contact','Contact']] as [$h,$l]): ?>
         <a href="<?=$h?>" class="px-4 py-2 text-white/75 hover:text-white text-[13px] font-semibold rounded-full hover:bg-white/10 transition-all"><?=$l?></a>
         <?php endforeach; ?>
       </div>
@@ -462,7 +464,7 @@ tailwind.config = { theme: { extend: {
     </div>
     <div id="mobileMenu" class="lg:hidden bg-[#001d40]/95 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl z-10 p-2">
       <div class="bg-white/5 rounded-2xl p-4 space-y-1">
-        <?php foreach([['#about','About'],['#services','Services'],['#gallery','Gallery'],['#doctors','Doctors'],['#testimonials','Reviews'],['#beforeafter','Before & After'],['#contact','Contact']] as [$h,$l]): ?>
+        <?php foreach([['#about','About'],['#services','Services'],['#gallery','Gallery'],['#doctors','Doctors'],['#testimonials','Reviews'],['#beforeafter','Before & After'],['#track','Track'],['#contact','Contact']] as [$h,$l]): ?>
         <a href="<?=$h?>" class="mobile-nav-link block px-4 py-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl text-sm font-semibold transition-all"><?=$l?></a>
         <?php endforeach; ?>
         <div class="pt-4 mt-2 border-t border-white/10 flex flex-col gap-2">
@@ -1003,6 +1005,85 @@ tailwind.config = { theme: { extend: {
   </div>
 </section>
 
+<!--  PATIENT TRACKING  -->
+<section id="track" class="py-24 bg-[#001630] relative overflow-hidden">
+  <div class="absolute inset-0 opacity-[.03]"><svg width="100%" height="100%"><defs><pattern id="trackGrid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="white" stroke-width=".5"/></pattern></defs><rect width="100%" height="100%" fill="url(#trackGrid)"/></svg></div>
+  <div class="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#ea741b]/8 rounded-full filter blur-[120px]"></div>
+  <div class="absolute bottom-0 left-1/3 w-[400px] h-[400px] bg-[#004591]/10 rounded-full filter blur-[100px]"></div>
+
+  <div class="max-w-4xl mx-auto px-5 lg:px-8 relative z-10 text-center">
+    <div class="reveal">
+      <div class="gold-bar mx-auto mb-5"></div>
+      <p class="text-[#ea741b] text-[11px] font-bold uppercase tracking-[.3em] mb-3 flex items-center justify-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#ea741b] animate-pulse"></span> Patient Portal
+      </p>
+      <h2 class="font-serif text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">Track Your Treatment</h2>
+      <p class="text-white/40 text-sm max-w-lg mx-auto mb-10">Enter your Patient ID to view your prescriptions, appointments, payments, and complete treatment history.</p>
+    </div>
+
+    <div class="reveal max-w-xl mx-auto">
+      <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,.3)]">
+        <form id="trackForm" class="space-y-5" onsubmit="return trackPatient()">
+          <div class="relative">
+            <div class="absolute left-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-[#ea741b]/10 flex items-center justify-center">
+              <i class="fas fa-id-card text-[#ea741b]"></i>
+            </div>
+            <input
+              type="text"
+              id="trackInput"
+              placeholder="Enter your Patient ID (e.g. MOD-1234)"
+              class="w-full pl-16 pr-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white text-sm font-medium placeholder:text-white/30 focus:outline-none focus:border-[#ea741b]/50 focus:bg-white/8 focus:ring-2 focus:ring-[#ea741b]/10 transition-all"
+              maxlength="9"
+              autocomplete="off"
+              required
+            >
+          </div>
+          <div id="trackError" class="hidden text-red-400 text-xs font-medium text-left px-2"></div>
+          <button type="submit" class="w-full py-4 bg-gradient-to-r from-[#ea741b] to-[#cf5e0e] hover:from-[#cf5e0e] hover:to-[#ea741b] text-white text-[11px] font-bold uppercase tracking-widest rounded-2xl transition-all duration-300 shadow-lg shadow-[#ea741b]/20 hover:shadow-[#ea741b]/40 hover:-translate-y-0.5 flex items-center justify-center gap-2">
+            <i class="fas fa-search text-xs"></i> Track My Records
+          </button>
+        </form>
+        <div class="mt-5 pt-5 border-t border-white/5 flex items-center justify-center gap-6 text-white/25 text-[11px]">
+          <span class="flex items-center gap-1.5"><i class="fas fa-shield-halved text-[#ea741b]/50"></i> Secure & Private</span>
+          <span class="flex items-center gap-1.5"><i class="fas fa-clock text-[#ea741b]/50"></i> Instant Access</span>
+          <span class="flex items-center gap-1.5"><i class="fas fa-mobile-screen text-[#ea741b]/50"></i> Mobile Friendly</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+function trackPatient() {
+  const input = document.getElementById('trackInput');
+  const error = document.getElementById('trackError');
+  const val = input.value.trim().toUpperCase();
+
+  error.classList.add('hidden');
+  input.classList.remove('border-red-500/50');
+
+  if (!val) {
+    error.textContent = 'Please enter your Patient ID.';
+    error.classList.remove('hidden');
+    input.classList.add('border-red-500/50');
+    return false;
+  }
+
+  if (!/^MOD-\d{4}$/.test(val)) {
+    error.textContent = 'Invalid format. Patient ID must be MOD-XXXX (e.g. MOD-1234).';
+    error.classList.remove('hidden');
+    input.classList.add('border-red-500/50');
+    return false;
+  }
+
+  window.location.href = 'patient_record.php?pid=' + val;
+  return false;
+}
+
+document.getElementById('trackInput').addEventListener('input', function() {
+  this.value = this.value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
+});
+</script>
+
 <!--  CONTACT  -->
 <?php
 date_default_timezone_set('Asia/Dhaka');
@@ -1053,7 +1134,7 @@ $status_dot = $is_open ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400';
                 </div>
                 <div>
                   <p class="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1.5">Clinic Location</p>
-                  <p class="text-white/90 font-medium text-[15px] leading-relaxed">5/2 (2nd Floor), Block A, Road 5<br>Lalmatia, Dhaka-1207.</p>
+                  <p class="text-white/90 font-medium text-[15px] leading-relaxed">5/4 (2nd Floor), Block A, Road 5<br>Lalmatia, Dhaka-1207.</p>
                 </div>
               </div>
             </div>
@@ -1198,7 +1279,7 @@ $status_dot = $is_open ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400';
             </div>
           </div>
           <div class="prose prose-sm max-w-none text-gray-600 leading-relaxed">
-            <p>Mamun's Ortho Dental is a premier dental care center located at <strong>5/2 (2nd Floor), Block A, Road 5, Lalmatia, Mohammadpur, Dhaka-1207</strong>, Bangladesh. Founded and led by <a href="dr-shamim-al-mamun.php" class="text-[#ea741b] font-semibold hover:underline">Dr. Mohammad Shamim Al Mamun</a> — a renowned Consultant Orthodontist with over 20 years of clinical experience — our clinic has served more than <strong>15,000 dental patients</strong> and successfully treated <strong>600+ orthodontic cases</strong>.</p>
+            <p>Mamun's Ortho Dental is a premier dental care center located at <strong>5/4 (2nd Floor), Block A, Road 5, Lalmatia, Mohammadpur, Dhaka-1207</strong>, Bangladesh. Founded and led by <a href="dr-shamim-al-mamun.php" class="text-[#ea741b] font-semibold hover:underline">Dr. Mohammad Shamim Al Mamun</a> — a renowned Consultant Orthodontist with over 20 years of clinical experience — our clinic has served more than <strong>15,000 dental patients</strong> and successfully treated <strong>600+ orthodontic cases</strong>.</p>
             <p>As a specialist in <strong>Dentofacial Orthopedics</strong>, Dr. Mamun holds a BDS from Dhaka Dental College and FCPS in Orthodontics from the Bangladesh College of Physicians and Surgeons. He currently serves as Associate Professor & Head of the Department of Orthodontics at Bangladesh Dental College and is a Consultant Orthodontist at Labaid Hospital, Dhanmondi.</p>
           </div>
         </div>
@@ -1359,7 +1440,7 @@ $status_dot = $is_open ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400';
               <i class="fas fa-location-dot text-[#ea741b] text-xs"></i>
             </div>
             <div>
-              <p class="text-white/50 text-[13px] leading-relaxed">5/2 (2nd Floor), Block A, Road 5, Lalmatia, Dhaka-1207</p>
+              <p class="text-white/50 text-[13px] leading-relaxed">5/4 (2nd Floor), Block A, Road 5, Lalmatia, Dhaka-1207</p>
             </div>
           </div>
           <div class="flex items-start gap-4 group">
@@ -1851,6 +1932,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
-<script src="assets/js/loader.js"></script>
+<script src="<?= asset('assets/js/main.js') ?>"></script>
+<script src="<?= asset('assets/js/loader.js') ?>"></script>
 </body>
 </html>

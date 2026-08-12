@@ -50,7 +50,7 @@ body{font-family:'Outfit',sans-serif;background:#e2e8f0;-webkit-print-color-adju
                 <img src="Logo.png" alt="Logo" class="w-12 h-12 object-contain rounded-xl bg-white/10 p-1 shadow-lg">
                 <div>
                     <h1 class="font-serif text-2xl font-bold tracking-tight leading-none">Mamun's <span class="text-brand-orange">Ortho</span> Dental</h1>
-                    <p class="text-[9px] font-bold text-white/40 tracking-[.25em] uppercase mt-1">5/2 BlockA, Lalmatia, Dhaka &middot; +880 1712-718527</p>
+                    <p class="text-[9px] font-bold text-white/40 tracking-[.25em] uppercase mt-1">5/4 BlockA, Lalmatia, Dhaka &middot; +880 1712-718527</p>
                 </div>
             </div>
             <div class="text-right">

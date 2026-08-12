@@ -1,6 +1,7 @@
 <?php
 require_once '../database/connection.php';
 require_once '../components/activity_logger.php';
+require_once '../components/cache.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $patient_name = $_POST['patient_name'] ?? '';
@@ -27,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute([$patient_name, $location, $stars, $review, $status]);
 
         log_activity($pdo, 'GUEST_REVIEW', "Guest review submitted by {$patient_name} ({$stars} stars) — Status: Pending", null, $patient_name);
+        cache_forget('pub:testimonials');
         
         if (!empty($pid)) {
             header('Location: ../patient_record.php?pid=' . urlencode($pid) . '&review_success=1');
