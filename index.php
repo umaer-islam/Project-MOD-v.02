@@ -457,7 +457,7 @@ tailwind.config = { theme: { extend: {
         <?php endforeach; ?>
       </div>
       <div class="flex items-center gap-3">
-        <a href="login_page.php" class="hidden md:flex w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 items-center justify-center text-white/60 hover:text-white transition-all" title="Portal"><i class="fas fa-user-md text-sm"></i></a>
+        <a href="login_page.php" target="_blank" class="hidden md:flex w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 items-center justify-center text-white/60 hover:text-white transition-all" title="Portal"><i class="fas fa-user-md text-sm"></i></a>
         <a href="#contact" class="hidden sm:inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#ea741b] to-[#cf5e0e] text-white text-[11px] font-bold uppercase tracking-widest rounded-full shadow-[0_4px_20px_rgba(234,116,27,.4)] transition-all hover:scale-105"><i class="fas fa-calendar-check text-xs"></i> Book Now</a>
         <button id="menuToggle" class="lg:hidden w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all"><i class="fas fa-bars text-sm"></i></button>
       </div>

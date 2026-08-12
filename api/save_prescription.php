@@ -34,6 +34,13 @@ if ($pdo !== null) {
             $pdo->exec("ALTER TABLE prescriptions ADD COLUMN investigations TEXT DEFAULT NULL AFTER diagnosis");
         } catch (Exception $ex) {}
     }
+    try {
+        $pdo->query("SELECT clinical_notes FROM prescriptions LIMIT 1");
+    } catch (PDOException $e) {
+        try {
+            $pdo->exec("ALTER TABLE prescriptions ADD COLUMN clinical_notes JSON DEFAULT NULL AFTER qr_code_path");
+        } catch (Exception $ex) {}
+    }
 }
 
 $doctor_id = $_SESSION['user_id'];
@@ -48,6 +55,17 @@ $investigations = trim($_POST['investigations'] ?? '');
 $advice = trim($_POST['advice'] ?? '');
 $follow_up = trim($_POST['follow_up'] ?? '');
 $rx_date = $_POST['rx_date'] !== '' ? $_POST['rx_date'] : date('Y-m-d');
+
+// New clinical note fields
+$complain = trim($_POST['complain'] ?? '');
+$on_examination = trim($_POST['on_examination'] ?? '');
+$medical_history = trim($_POST['medical_history'] ?? '');
+
+$clinical_notes = json_encode([
+    'complain'       => $complain,
+    'on_examination' => $on_examination,
+    'medical_history'=> $medical_history,
+]);
 
 // Process Medicines
 $med_names = $_POST['med_name'] ?? [];
@@ -90,8 +108,8 @@ try {
     // Use Google Charts API to generate a QR code pointing to this prescription or patient ID
     $qrUrl = "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=PatientID:" . urlencode($patient_id) . "%0ADr:". urlencode($_SESSION['user_name']);
 
-    $stmt = $pdo->prepare("INSERT INTO prescriptions (patient_id, doctor_id, diagnosis, investigations, medicines, advice, follow_up, rx_date, qr_code_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$patient_id, $doctor_id, $diagnosis, $investigations, $medsJson, $advice, $follow_up, $rx_date, $qrUrl]);
+    $stmt = $pdo->prepare("INSERT INTO prescriptions (patient_id, doctor_id, diagnosis, investigations, medicines, advice, follow_up, rx_date, qr_code_path, clinical_notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$patient_id, $doctor_id, $diagnosis, $investigations, $medsJson, $advice, $follow_up, $rx_date, $qrUrl, $clinical_notes]);
     $prescription_id = $pdo->lastInsertId();
 
     $pdo->commit();

@@ -92,6 +92,7 @@ run($pdo, 'Create prescriptions table', "CREATE TABLE IF NOT EXISTS prescription
     follow_up VARCHAR(100) DEFAULT NULL,
     rx_date DATE DEFAULT NULL,
     qr_code_path VARCHAR(255) DEFAULT NULL,
+    clinical_notes JSON DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
@@ -99,6 +100,7 @@ run($pdo, 'Create prescriptions table', "CREATE TABLE IF NOT EXISTS prescription
 run($pdo, 'Prescriptions: add investigations', "ALTER TABLE prescriptions ADD COLUMN investigations TEXT DEFAULT NULL AFTER diagnosis");
 run($pdo, 'Prescriptions: add follow_up', "ALTER TABLE prescriptions ADD COLUMN follow_up VARCHAR(100) DEFAULT NULL");
 run($pdo, 'Prescriptions: add rx_date', "ALTER TABLE prescriptions ADD COLUMN rx_date DATE DEFAULT NULL");
+run($pdo, 'Prescriptions: add clinical_notes', "ALTER TABLE prescriptions ADD COLUMN clinical_notes JSON DEFAULT NULL AFTER qr_code_path");
 
 // ── payments ──
 run($pdo, 'Create payments table', "CREATE TABLE IF NOT EXISTS payments (

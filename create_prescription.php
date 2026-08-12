@@ -50,11 +50,11 @@ if ($pdo !== null) {
     }
     #rxSystemScope .card-premium {
         background: #ffffff;
-        border-radius: 20px;
-        border: 1px solid rgba(0, 69, 145, 0.05);
-        box-shadow: 0 4px 25px rgba(0, 69, 145, 0.04);
+        border-radius: 16px;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 4px 20px rgba(0, 69, 145, 0.06);
         padding: 24px;
-        margin-bottom: 24px;
+        margin-bottom: 20px;
     }
     #rxSystemScope label {
         font-size: 11px;
@@ -116,10 +116,15 @@ if ($pdo !== null) {
     #rxSystemScope .med-row {
         background: #f8fafc;
         border-radius: 14px;
-        border: 1px solid #edf2f7;
+        border: 1px solid #e2e8f0;
         padding: 16px;
         position: relative;
         margin-bottom: 12px;
+        transition: all 0.2s ease;
+    }
+    #rxSystemScope .med-row:hover {
+        border-color: #ea741b/30;
+        box-shadow: 0 2px 12px rgba(234, 116, 27, 0.06);
     }
     #rxSystemScope .chk-pill {
         cursor: pointer;
@@ -146,13 +151,42 @@ if ($pdo !== null) {
         color: #004591;
     }
 
+    /* ── Frequency Mode Toggle ── */
+    .freq-mode-toggle {
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border: 1.5px solid #E2E8F0;
+        border-radius: 8px;
+        background: #ffffff;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #7c7c7c;
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+    .freq-mode-toggle:hover {
+        border-color: #ea741b;
+        color: #ea741b;
+    }
+    .freq-mode-toggle.active {
+        background: #004591;
+        border-color: #004591;
+        color: #ffffff;
+    }
+    .freq-mode-panel { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+
     /* ── US Letter Preview Canvas (612pt x 792pt) ── */
     .preview-container {
         overflow-x: auto;
-        padding: 10px;
-        background: #cbd5e1;
+        padding: 16px;
+        background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
         border-radius: 16px;
-        border: 1px solid #94a3b8;
+        border: 1px solid #e2e8f0;
     }
     .letter-page {
         width: 612pt;
@@ -162,8 +196,8 @@ if ($pdo !== null) {
         background-position: center;
         background-repeat: no-repeat;
         position: relative;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-        border-radius: 4px;
+        box-shadow: 0 8px 30px rgba(0, 69, 145, 0.12);
+        border-radius: 8px;
         margin: 0 auto;
         transform-origin: top center;
     }
@@ -249,116 +283,61 @@ if ($pdo !== null) {
         font-style: italic;
         color: #475569;
     }
-    /* Chief Complaint / Diagnosis: */
-    .c-diagnosis {
+
+    /* ── Clinical Note Fields (Left Column) ── */
+    .c-clinical-box {
         position: absolute;
         left: 20pt;
-        top: 195pt;
         width: 142pt;
-        height: 100pt;
         font-family: 'Poppins', sans-serif;
         color: #000000;
         overflow: hidden;
         text-align: left;
     }
-    .c-diagnosis strong {
+    .c-clinical-box strong {
         display: block;
-        font-size: 9.5pt;
+        font-size: 8pt;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.06em;
         color: #1e293b;
+        margin-bottom: 1pt;
+        border-bottom: 0.5pt solid #ea741b;
+        padding-bottom: 1pt;
         margin-bottom: 2pt;
     }
-    .c-diagnosis span {
-        font-size: 9.5pt;
-        line-height: 13pt;
+    .c-clinical-box span {
+        font-size: 8.5pt;
+        line-height: 11pt;
         font-weight: 400;
     }
 
-    /* Investigations: */
-    .c-investigations {
-        position: absolute;
-        left: 20pt;
-        top: 305pt;
-        width: 142pt;
-        height: 100pt;
-        font-family: 'Poppins', sans-serif;
-        color: #000000;
-        overflow: hidden;
-        text-align: left;
-    }
-    .c-investigations strong {
-        display: block;
-        font-size: 9.5pt;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #1e293b;
-        margin-bottom: 2pt;
-    }
-    .c-investigations span {
-        font-size: 9.5pt;
-        line-height: 13pt;
-        font-weight: 400;
-    }
+    .c-complain { top: 195pt; height: 48pt; }
+    .c-exam { top: 248pt; height: 48pt; }
+    .c-history { top: 301pt; height: 48pt; }
+    .c-investigations { top: 354pt; height: 48pt; }
+    .c-diagnosis { top: 407pt; height: 48pt; }
 
-    /* Advice: */
-    .c-advice {
-        position: absolute;
-        left: 20pt;
-        top: 415pt;
-        width: 142pt;
-        height: 150pt;
-        font-family: 'Poppins', sans-serif;
-        color: #000000;
-        overflow: hidden;
-        text-align: left;
-    }
-    .c-advice strong {
-        display: block;
-        font-size: 9.5pt;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #1e293b;
-        margin-bottom: 2pt;
-    }
-    .c-advice span {
-        font-size: 9.5pt;
-        line-height: 13pt;
-        font-weight: 400;
-        white-space: pre-wrap;
-    }
-
-    /* Follow-up: */
-    .c-followup {
-        position: absolute;
-        left: 20pt;
-        top: 575pt;
-        width: 142pt;
-        height: 30pt;
-        font-family: 'Poppins', sans-serif;
-        font-size: 9.5pt;
-        font-weight: 700;
-        color: #000000;
-        overflow: hidden;
-        text-align: left;
-    }
+    /* Advice & Follow-up (Left Column, below clinical) */
+    .c-advice { top: 465pt; height: 80pt; }
+    .c-followup { top: 555pt; height: 25pt; }
 
 </style>
 
-<main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto" id="rxSystemScope">
+<main class="flex-1 bg-[#F4F7FC] p-4 sm:p-6 lg:p-8 overflow-y-auto" id="rxSystemScope">
     
-    <div class="row align-items-center mb-4">
-        <div class="col-12 col-md-6">
-            <p class="text-uppercase tracking-widest text-warning font-weight-bold mb-1" style="font-size:10px; letter-spacing: 0.25em;">PRESCRIPTION SYSTEM V2</p>
-            <h1 class="h2 text-primary font-serif font-weight-bold m-0">Dynamic Prescription Builder</h1>
+    <div class="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <div>
+            <p class="text-[10px] uppercase tracking-[0.25em] text-[#ea741b] font-bold mb-1">Prescription</p>
+            <h1 class="font-serif text-2xl md:text-3xl text-[#004591] font-bold">Prescription Builder</h1>
+            <p class="text-[#7c7c7c] text-sm mt-1">Create, preview, and print prescriptions</p>
         </div>
-        <div class="col-12 col-md-6 text-md-end mt-3 mt-md-0">
-            <span class="badge bg-secondary me-2 py-2 px-3 text-uppercase font-weight-bold" id="autosaveIndicator" style="font-size:10px;">Autosave Active</span>
-            <button class="btn btn-outline-primary py-2 px-3 rounded-pill text-uppercase font-weight-bold" style="font-size:10px;" data-bs-toggle="modal" data-bs-target="#settingsModal">
-                <i class="fas fa-image me-1"></i> Rx Background Template
+        <div class="flex items-center gap-3 self-start sm:self-auto">
+            <span class="inline-flex items-center gap-1.5 bg-green-50 text-green-700 border border-green-200 text-[10px] font-bold uppercase tracking-widest py-2 px-3 rounded-xl" id="autosaveIndicator">
+                <i class="fas fa-check-circle text-[10px]"></i> Autosave Active
+            </span>
+            <button class="inline-flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-[#ea741b] hover:text-white text-[#004591] text-[10px] font-bold uppercase tracking-widest rounded-xl border border-gray-200 hover:border-[#ea741b] shadow-sm transition-all duration-300" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                <i class="fas fa-image text-xs"></i> Rx Background
             </button>
         </div>
     </div>
@@ -370,8 +349,11 @@ if ($pdo !== null) {
                 
                 <!-- Patient Block -->
                 <div class="card-premium">
-                    <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-2">
-                        <h4 class="h5 m-0 text-primary font-weight-bold"><i class="fas fa-user-injured me-2 text-warning"></i> Patient Registry</h4>
+                    <div class="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100">
+                        <div class="w-10 h-10 rounded-xl bg-[#ea741b]/10 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-user-injured text-[#ea741b] text-sm"></i>
+                        </div>
+                        <h4 class="text-[13px] font-bold text-[#004591] uppercase tracking-wider m-0">Patient Information</h4>
                     </div>
                     
                     <div class="row g-3">
@@ -415,42 +397,66 @@ if ($pdo !== null) {
                     </div>
                 </div>
 
-                <!-- Diagnosis Block -->
+                <!-- Clinical Notes Block -->
                 <div class="card-premium">
-                    <div class="d-flex align-items-center mb-4 border-bottom pb-2">
-                        <h4 class="h5 m-0 text-primary font-weight-bold"><i class="fas fa-stethoscope me-2 text-warning"></i> Clinical Notes</h4>
+                    <div class="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100">
+                        <div class="w-10 h-10 rounded-xl bg-[#ea741b]/10 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-stethoscope text-[#ea741b] text-sm"></i>
+                        </div>
+                        <h4 class="text-[13px] font-bold text-[#004591] uppercase tracking-wider m-0">Clinical Notes</h4>
                     </div>
-                    <div class="mb-3">
-                        <label for="pDiagnosis">Chief Complaint / Diagnosis *</label>
-                        <textarea class="form-control" id="pDiagnosis" name="diagnosis" required rows="2" placeholder="Describe symptoms or clinical diagnosis..."></textarea>
-                    </div>
-                    <div>
-                        <label for="pInvestigations">Investigations Advised</label>
-                        <textarea class="form-control" id="pInvestigations" name="investigations" rows="2" placeholder="e.g. OPG, RVG, CBCT, Blood Tests, HbA1c..."></textarea>
-                        <div class="form-text text-muted" style="font-size:10px; margin-top:4px;">Dental imaging & lab investigations ordered</div>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="pComplain">Complain</label>
+                            <textarea class="form-control" id="pComplain" name="complain" rows="2" placeholder="Patient's chief complaint..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label for="pExamination">On Examination</label>
+                            <textarea class="form-control" id="pExamination" name="on_examination" rows="2" placeholder="Clinical findings on examination..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label for="pHistory">M/H (Medical History)</label>
+                            <textarea class="form-control" id="pHistory" name="medical_history" rows="2" placeholder="Relevant medical history..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label for="pInvestigations">Investigations</label>
+                            <textarea class="form-control" id="pInvestigations" name="investigations" rows="2" placeholder="e.g. OPG, RVG, CBCT, Blood Tests, HbA1c..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label for="pDiagnosis">W/D (Working Diagnosis)</label>
+                            <textarea class="form-control" id="pDiagnosis" name="diagnosis" rows="2" placeholder="Working diagnosis..."></textarea>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Medicines Dynamic Repeater -->
                 <div class="card-premium">
-                    <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-2">
-                        <h4 class="h5 m-0 text-primary font-weight-bold"><i class="fas fa-pills me-2 text-warning"></i> Prescription Sheet (Rx)</h4>
-                        <span class="badge bg-light text-secondary border py-2 px-3 text-uppercase font-weight-bold" style="font-size:10px;"><span id="medCounterDisplay">0</span>/15 Medicines</span>
+                    <div class="flex items-center justify-between mb-5 pb-4 border-b border-gray-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-[#ea741b]/10 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-pills text-[#ea741b] text-sm"></i>
+                            </div>
+                            <h4 class="text-[13px] font-bold text-[#004591] uppercase tracking-wider m-0">Prescription (Rx)</h4>
+                        </div>
+                        <span class="inline-flex items-center gap-1.5 bg-gray-50 text-gray-500 border border-gray-200 text-[10px] font-bold uppercase tracking-widest py-1.5 px-3 rounded-lg"><span id="medCounterDisplay" class="text-[#ea741b]">0</span>/15</span>
                     </div>
 
                     <div id="medRepeaterContainer" class="mb-4">
                         <!-- Dynamic medicine rows dynamically added -->
                     </div>
 
-                    <button type="button" class="btn btn-orange-outline w-100 py-3 text-uppercase font-weight-bold" id="addMedRowBtn">
-                        <i class="fas fa-plus-circle me-1"></i> Add Medication Row
+                    <button type="button" class="w-full inline-flex items-center justify-center gap-2 py-3 bg-white hover:bg-[#ea741b] text-[#ea741b] hover:text-white text-[11px] font-bold uppercase tracking-widest rounded-xl border-2 border-dashed border-[#ea741b]/30 hover:border-[#ea741b] transition-all duration-300" id="addMedRowBtn">
+                        <i class="fas fa-plus-circle text-xs"></i> Add Medication
                     </button>
                 </div>
 
                 <!-- Advice & Follow-Up Block -->
                 <div class="card-premium">
-                    <div class="d-flex align-items-center mb-4 border-bottom pb-2">
-                        <h4 class="h5 m-0 text-primary font-weight-bold"><i class="fas fa-notes-medical me-2 text-warning"></i> Advice & Follow-Up</h4>
+                    <div class="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100">
+                        <div class="w-10 h-10 rounded-xl bg-[#ea741b]/10 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-notes-medical text-[#ea741b] text-sm"></i>
+                        </div>
+                        <h4 class="text-[13px] font-bold text-[#004591] uppercase tracking-wider m-0">Advice & Follow-Up</h4>
                     </div>
                     <div class="row g-3">
                         <div class="col-12">
@@ -480,12 +486,12 @@ if ($pdo !== null) {
                 </div>
 
                 <!-- Submit / Actions -->
-                <div class="d-flex justify-content-between align-items-center mb-5 gap-3">
-                    <button type="button" class="btn btn-outline-danger py-3 px-4 rounded-pill font-weight-bold text-uppercase" style="font-size:10px;" id="clearDraftBtn">
-                        Clear Form
+                <div class="flex justify-between items-center mb-8 gap-3">
+                    <button type="button" class="inline-flex items-center gap-2 px-5 py-3 bg-white hover:bg-red-50 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-xl border border-red-200 hover:border-red-300 transition-all duration-300" id="clearDraftBtn">
+                        <i class="fas fa-trash-alt text-xs"></i> Clear Form
                     </button>
-                    <button type="button" class="btn btn-navy py-3 px-5 rounded-pill font-weight-bold text-uppercase" id="submitSaveBtn">
-                        <i class="fas fa-print me-2"></i> Save &amp; Print Prescription
+                    <button type="button" class="inline-flex items-center gap-2 px-7 py-3 bg-[#004591] hover:bg-[#ea741b] text-white text-[11px] font-bold uppercase tracking-widest rounded-xl shadow-lg shadow-[#004591]/20 hover:shadow-[#ea741b]/20 transition-all duration-300" id="submitSaveBtn">
+                        <i class="fas fa-print text-xs"></i> Save &amp; Print
                     </button>
                 </div>
 
@@ -494,7 +500,7 @@ if ($pdo !== null) {
 
         <!-- US Letter Preview Canvas (Right) -->
         <div class="col-12 col-xl-6 text-center">
-            <p class="text-uppercase tracking-widest text-warning font-weight-bold mb-2" style="font-size:10px; letter-spacing: 0.25em;">US Letter Paper Preview</p>
+            <p class="text-[10px] uppercase tracking-[0.25em] text-[#ea741b] font-bold mb-2">Live Preview</p>
             <div class="preview-container mb-4">
                 <div class="letter-page" id="rxLetterCanvas" style="background-image: url('<?= $rx_template ? htmlspecialchars($rx_template) : '' ?>');">
                     <!-- Absolute Text Fields overlaying coordinate metrics -->
@@ -506,10 +512,13 @@ if ($pdo !== null) {
                         <!-- Render dynamic absolute medicines list -->
                     </div>
 
-                    <div class="c-investigations" id="cvInvestigations"></div>
-                    <div class="c-diagnosis" id="cvDiagnosis"></div>
-                    <div class="c-advice" id="cvAdvice"></div>
-                    <div class="c-followup" id="cvFollowup"></div>
+                    <div class="c-clinical-box c-complain" id="cvComplain"></div>
+                    <div class="c-clinical-box c-exam" id="cvExam"></div>
+                    <div class="c-clinical-box c-history" id="cvHistory"></div>
+                    <div class="c-clinical-box c-investigations" id="cvInvestigations"></div>
+                    <div class="c-clinical-box c-diagnosis" id="cvDiagnosis"></div>
+                    <div class="c-clinical-box c-advice" id="cvAdvice"></div>
+                    <div class="c-clinical-box c-followup" id="cvFollowup"></div>
 
                 </div>
             </div>
@@ -557,14 +566,22 @@ if ($pdo !== null) {
                 <input type="text" name="med_note[]" class="form-control med-note-input" placeholder="Note (e.g. After Meal)">
             </div>
         </div>
-        <div class="d-flex flex-wrap gap-1 align-items-center">
+        <!-- Frequency Mode Toggle -->
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="freq-mode-toggle" data-mode="freq" title="Morning/Noon/Night">
+                <i class="fas fa-clock"></i> Freq
+            </span>
+            <span class="freq-mode-toggle" data-mode="hourly" title="Six/Eight/Twelve Hourly">
+                <i class="fas fa-history"></i> Hourly
+            </span>
+        </div>
+        <!-- Frequency Checkboxes (default) -->
+        <div class="freq-mode-panel freq-panel-freq">
             <?php 
             $checks = [
                 ['Morning', 'chk-morning'],
                 ['Noon', 'chk-noon'],
-                ['Afternoon', 'chk-afternoon'],
-                ['Night', 'chk-night'],
-                ['Late Night', 'chk-latenight']
+                ['Night', 'chk-night']
             ];
             foreach($checks as $chk):
             ?>
@@ -573,8 +590,23 @@ if ($pdo !== null) {
                 <span><?= $chk[0] ?></span>
             </label>
             <?php endforeach; ?>
-            <input type="hidden" name="med_frequency[]" class="med-frequency-hidden" value="(0-0-0-0-0)">
         </div>
+        <!-- Hourly Radio Buttons (hidden by default) -->
+        <div class="freq-mode-panel freq-panel-hourly d-none">
+            <label class="chk-pill">
+                <input type="radio" name="med_hourly_temp" class="med-hourly-radio" value="Six Hourly">
+                <span>6-Hourly</span>
+            </label>
+            <label class="chk-pill">
+                <input type="radio" name="med_hourly_temp" class="med-hourly-radio" value="Eight Hourly">
+                <span>8-Hourly</span>
+            </label>
+            <label class="chk-pill">
+                <input type="radio" name="med_hourly_temp" class="med-hourly-radio" value="Twelve Hourly">
+                <span>12-Hourly</span>
+            </label>
+        </div>
+        <input type="hidden" name="med_frequency[]" class="med-frequency-hidden" value="0+0+0">
         <button type="button" class="btn btn-close position-absolute top-2 end-2 remove-med-row-btn" style="padding:4px;"></button>
     </div>
 </template>
@@ -591,8 +623,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const pDateRoot = document.getElementById('pDate');
     const pDate = pDateRoot.querySelector('input[type="hidden"]');
     const pPhone = document.getElementById('pPhone');
-    const pDiagnosis = document.getElementById('pDiagnosis');
+    const pComplain = document.getElementById('pComplain');
+    const pExamination = document.getElementById('pExamination');
+    const pHistory = document.getElementById('pHistory');
     const pInvestigations = document.getElementById('pInvestigations');
+    const pDiagnosis = document.getElementById('pDiagnosis');
     const pAdvice = document.getElementById('pAdvice');
     const pFollowupRoot = document.getElementById('pFollowup');
     const pFollowup = pFollowupRoot.querySelector('input[type="hidden"]');
@@ -601,6 +636,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const cvAge = document.getElementById('cvAge');
     const cvDate = document.getElementById('cvDate');
     const cvMedsContainer = document.getElementById('cvMedsContainer');
+    const cvComplain = document.getElementById('cvComplain');
+    const cvExam = document.getElementById('cvExam');
+    const cvHistory = document.getElementById('cvHistory');
     const cvInvestigations = document.getElementById('cvInvestigations');
     const cvDiagnosis = document.getElementById('cvDiagnosis');
     const cvAdvice = document.getElementById('cvAdvice');
@@ -627,9 +665,13 @@ document.addEventListener('DOMContentLoaded', () => {
             cvDate.textContent = '--/--/----';
         }
         
+        // Clinical note boxes
+        cvComplain.innerHTML = pComplain.value.trim() ? `<strong>Complain</strong><span>${pComplain.value.trim().replace(/\n/g, '<br>')}</span>` : '';
+        cvExam.innerHTML = pExamination.value.trim() ? `<strong>On Examination</strong><span>${pExamination.value.trim().replace(/\n/g, '<br>')}</span>` : '';
+        cvHistory.innerHTML = pHistory.value.trim() ? `<strong>M/H</strong><span>${pHistory.value.trim().replace(/\n/g, '<br>')}</span>` : '';
         cvInvestigations.innerHTML = pInvestigations.value.trim() ? `<strong>Investigations</strong><span>${pInvestigations.value.trim().replace(/\n/g, '<br>')}</span>` : '';
-        cvDiagnosis.innerHTML = pDiagnosis.value.trim() ? `<strong>Diagnosis</strong><span>${pDiagnosis.value.trim().replace(/\n/g, '<br>')}</span>` : '';
-        cvAdvice.innerHTML = pAdvice.value.trim() ? `<strong>Advice / Notes</strong><span>${pAdvice.value.trim()}</span>` : '';
+        cvDiagnosis.innerHTML = pDiagnosis.value.trim() ? `<strong>W/D</strong><span>${pDiagnosis.value.trim().replace(/\n/g, '<br>')}</span>` : '';
+        cvAdvice.innerHTML = pAdvice.value.trim() ? `<strong>Advice</strong><span>${pAdvice.value.trim().replace(/\n/g, '<br>')}</span>` : '';
         cvFollowup.innerHTML = pFollowup.value ? `<strong>${pFollowup.value}</strong>` : '';
         
         // Medicines Listing Preview mapping coordinates precisely
@@ -645,8 +687,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const entry = document.createElement('div');
                 entry.className = 'c-med-entry';
                 
-                // Formulate duration representation
-                const freqDur = `${freq}${dur ? ' × ' + dur : ''}`;
+                // Formulate duration: "1 + 1 + 0 | 1 Week" or "Six Hourly | 3 Days"
+                const formattedFreq = freq.replace(/\+/g, ' + ');
+                const freqDur = dur ? `${formattedFreq} | ${dur}` : formattedFreq;
                 
                 entry.innerHTML = `
                     <div class="c-med-name">${name}</div>
@@ -658,13 +701,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    [pName, pAge, pDate, pDiagnosis, pInvestigations, pAdvice, pFollowup].forEach(el => {
+    [pName, pAge, pDate, pComplain, pExamination, pHistory, pInvestigations, pDiagnosis, pAdvice, pFollowup].forEach(el => {
         el.addEventListener('input', syncPreview);
         el.addEventListener('change', syncPreview);
     });
 
     // ── Medicine Dynamic Repeater Management ──
-    function addMedRow(name='', dur='', note='', freq='(0-0-0-0-0)') {
+    function addMedRow(name='', dur='', note='', freq='0+0+0') {
         if (medCount >= 15) {
             alert("Maximum 15 medicines allowed.");
             return;
@@ -679,14 +722,28 @@ document.addEventListener('DOMContentLoaded', () => {
         row.querySelector('.med-note-input').value = note;
         row.querySelector('.med-frequency-hidden').value = freq;
         
-        // Parse checkboxes status from freq
-        const matches = freq.match(/\((\d)-(\d)-(\d)-(\d)-(\d)\)/);
-        if (matches && matches.length === 6) {
-            if (matches[1] === '1') setCheck(row.querySelector('.chk-morning'));
-            if (matches[2] === '1') setCheck(row.querySelector('.chk-noon'));
-            if (matches[3] === '1') setCheck(row.querySelector('.chk-afternoon'));
-            if (matches[4] === '1') setCheck(row.querySelector('.chk-night'));
-            if (matches[5] === '1') setCheck(row.querySelector('.chk-latenight'));
+        // ── Frequency Mode Detection & Restore ──
+        const restoreFreqPanel = row.querySelector('.freq-panel-freq');
+        const restoreHourlyPanel = row.querySelector('.freq-panel-hourly');
+        const allToggleBtns = row.querySelectorAll('.freq-mode-toggle');
+        const isHourly = !freq.match(/(\d)\+(\d)\+(\d)/) && !freq.match(/\((\d)-/);
+
+        if (isHourly && freq) {
+            restoreFreqPanel.classList.add('d-none');
+            restoreHourlyPanel.classList.remove('d-none');
+            allToggleBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === 'hourly'));
+            const radio = row.querySelector(`.med-hourly-radio[value="${freq}"]`);
+            if (radio) radio.checked = true;
+        } else {
+            restoreFreqPanel.classList.remove('d-none');
+            restoreHourlyPanel.classList.add('d-none');
+            allToggleBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === 'freq'));
+            const matches = freq.match(/(\d)\+(\d)\+(\d)/) || freq.match(/\((\d)-(\d)-(\d)(?:-\d)?(?:-\d)?\)/);
+            if (matches && matches.length >= 4) {
+                if (matches[1] === '1') setCheck(row.querySelector('.chk-morning'));
+                if (matches[2] === '1') setCheck(row.querySelector('.chk-noon'));
+                if (matches[3] === '1') setCheck(row.querySelector('.chk-night'));
+            }
         }
 
         function setCheck(chk) {
@@ -711,21 +768,73 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Checkbox events mapping to (1-0-0-1-0) format
-        const checks = row.querySelectorAll('.med-freq-box');
+        // ── Frequency Mode Toggle Logic ──
+        const toggleBtns = row.querySelectorAll('.freq-mode-toggle');
+        const freqPanel = row.querySelector('.freq-panel-freq');
+        const hourlyPanel = row.querySelector('.freq-panel-hourly');
         const hiddenFreq = row.querySelector('.med-frequency-hidden');
 
-        checks.forEach(chk => {
+        toggleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.mode;
+                toggleBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                if (mode === 'freq') {
+                    freqPanel.classList.remove('d-none');
+                    hourlyPanel.classList.add('d-none');
+                    // Uncheck hourly radios
+                    row.querySelectorAll('.med-hourly-radio').forEach(r => r.checked = false);
+                    // Build freq from checkboxes
+                    const morning = row.querySelector('.chk-morning').checked ? '1' : '0';
+                    const noon = row.querySelector('.chk-noon').checked ? '1' : '0';
+                    const night = row.querySelector('.chk-night').checked ? '1' : '0';
+                    hiddenFreq.value = `${morning}+${noon}+${night}`;
+                } else {
+                    hourlyPanel.classList.remove('d-none');
+                    freqPanel.classList.add('d-none');
+                    // Uncheck frequency checkboxes
+                    row.querySelectorAll('.med-freq-box').forEach(c => { c.checked = false; c.parentElement.classList.remove('active'); });
+                    hiddenFreq.value = '';
+                }
+                syncPreview();
+                saveDraft();
+            });
+        });
+
+        // Frequency checkbox events
+        row.querySelectorAll('.med-freq-box').forEach(chk => {
             chk.addEventListener('change', () => {
                 chk.parentElement.classList.toggle('active', chk.checked);
-                
                 const morning = row.querySelector('.chk-morning').checked ? '1' : '0';
                 const noon = row.querySelector('.chk-noon').checked ? '1' : '0';
-                const afternoon = row.querySelector('.chk-afternoon').checked ? '1' : '0';
                 const night = row.querySelector('.chk-night').checked ? '1' : '0';
-                const latenight = row.querySelector('.chk-latenight').checked ? '1' : '0';
-                
-                hiddenFreq.value = `(${morning}-${noon}-${afternoon}-${night}-${latenight})`;
+                hiddenFreq.value = `${morning}+${noon}+${night}`;
+                syncPreview();
+                saveDraft();
+            });
+        });
+
+        // Hourly radio events (click-to-deselect: click again to uncheck)
+        row.querySelectorAll('.med-hourly-radio').forEach(radio => {
+            radio.addEventListener('mousedown', () => {
+                if (radio.checked) {
+                    radio.checked = false;
+                    radio.parentElement.classList.remove('active');
+                    hiddenFreq.value = '';
+                    syncPreview();
+                    saveDraft();
+                }
+            });
+            radio.addEventListener('change', () => {
+                if (radio.checked) {
+                    // Uncheck other radios in same group
+                    row.querySelectorAll('.med-hourly-radio').forEach(r => {
+                        if (r !== radio) r.parentElement.classList.remove('active');
+                    });
+                    hiddenFreq.value = radio.value;
+                    radio.parentElement.classList.add('active');
+                }
                 syncPreview();
                 saveDraft();
             });
@@ -823,8 +932,11 @@ document.addEventListener('DOMContentLoaded', () => {
             age: pAge.value,
             phone: pPhone.value,
             rx_date: pDate.value,
-            diagnosis: pDiagnosis.value,
+            complain: pComplain.value,
+            on_examination: pExamination.value,
+            medical_history: pHistory.value,
             investigations: pInvestigations.value,
+            diagnosis: pDiagnosis.value,
             advice: pAdvice.value,
             follow_up: pFollowup.value,
             medicines: meds
@@ -850,8 +962,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 pAge.value = data.age || '';
                 pPhone.value = data.phone || '';
                 if(data.rx_date) pDate.value = data.rx_date;
-                pDiagnosis.value = data.diagnosis || '';
+                pComplain.value = data.complain || '';
+                pExamination.value = data.on_examination || '';
+                pHistory.value = data.medical_history || '';
                 pInvestigations.value = data.investigations || '';
+                pDiagnosis.value = data.diagnosis || '';
                 pAdvice.value = data.advice || '';
                 pFollowup.value = data.follow_up || '';
                 setModDropdown(pFollowupRoot, data.follow_up || '');

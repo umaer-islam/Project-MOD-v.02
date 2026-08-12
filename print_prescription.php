@@ -27,6 +27,7 @@ if ($pdo !== null) {
         
         if ($pr) {
             $medicines = json_decode($pr['medicines'], true) ?? [];
+            $clinical = json_decode($pr['clinical_notes'] ?? '{}', true) ?? [];
         } else {
             echo "Prescription record not found.";
             exit;
@@ -209,67 +210,46 @@ $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=004
             font-style: italic;
             color: #475569;
         }
-        /* Chief Complaint / Diagnosis: X=20, Y=195, W=142, H=100 */
-        .c-diagnosis {
+        /* ── Clinical Note Fields (Left Column) ── */
+        .c-clinical-box {
             position: absolute;
             left: 20pt;
-            top: 195pt;
             width: 142pt;
-            height: 100pt;
             font-family: 'Poppins', sans-serif;
             color: #000000;
             overflow: hidden;
             text-align: left;
         }
-        .c-diagnosis strong {
+        .c-clinical-box strong {
             display: block;
-            font-size: 9.5pt;
+            font-size: 8pt;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
             color: #1e293b;
+            border-bottom: 0.5pt solid #ea741b;
+            padding-bottom: 1pt;
             margin-bottom: 2pt;
         }
-        .c-diagnosis span {
-            font-size: 9.5pt;
-            line-height: 13pt;
+        .c-clinical-box span {
+            font-size: 8.5pt;
+            line-height: 11pt;
             font-weight: 400;
         }
- 
-        /* Investigations: X=20, Y=305, W=142, H=100 */
-        .c-investigations {
-            position: absolute;
-            left: 20pt;
-            top: 305pt;
-            width: 142pt;
-            height: 100pt;
-            font-family: 'Poppins', sans-serif;
-            color: #000000;
-            overflow: hidden;
-            text-align: left;
-        }
-        .c-investigations strong {
-            display: block;
-            font-size: 9.5pt;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #1e293b;
-            margin-bottom: 2pt;
-        }
-        .c-investigations span {
-            font-size: 9.5pt;
-            line-height: 13pt;
-            font-weight: 400;
-        }
- 
-        /* Advice: X=20, Y=415, W=142, H=150 */
+
+        .c-complain { top: 195pt; height: 48pt; }
+        .c-exam { top: 248pt; height: 48pt; }
+        .c-history { top: 301pt; height: 48pt; }
+        .c-investigations { top: 354pt; height: 48pt; }
+        .c-diagnosis { top: 407pt; height: 48pt; }
+
+        /* Advice: X=20, Y=465, W=142, H=80 */
         .c-advice {
             position: absolute;
             left: 20pt;
-            top: 415pt;
+            top: 465pt;
             width: 142pt;
-            height: 150pt;
+            height: 80pt;
             font-family: 'Poppins', sans-serif;
             color: #000000;
             overflow: hidden;
@@ -277,29 +257,31 @@ $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=004
         }
         .c-advice strong {
             display: block;
-            font-size: 9.5pt;
+            font-size: 8pt;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
             color: #1e293b;
+            border-bottom: 0.5pt solid #cbd5e1;
+            padding-bottom: 1pt;
             margin-bottom: 2pt;
         }
         .c-advice span {
-            font-size: 9.5pt;
-            line-height: 13pt;
+            font-size: 8.5pt;
+            line-height: 11pt;
             font-weight: 400;
             white-space: pre-wrap;
         }
  
-        /* Follow-up: X=20, Y=575, W=142, H=30 */
+        /* Follow-up: X=20, Y=555, W=142, H=25 */
         .c-followup {
             position: absolute;
             left: 20pt;
-            top: 575pt;
+            top: 555pt;
             width: 142pt;
-            height: 30pt;
+            height: 25pt;
             font-family: 'Poppins', sans-serif;
-            font-size: 9.5pt;
+            font-size: 9pt;
             font-weight: 700;
             color: #000000;
             overflow: hidden;
@@ -371,7 +353,7 @@ $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=004
                 <div class="c-med-entry">
                     <div class="c-med-name"><?= htmlspecialchars($m['name']) ?></div>
                     <div class="c-med-freq">
-                        <?= htmlspecialchars($m['frequency']) ?><?= !empty($m['duration']) ? ' &times; ' . htmlspecialchars($m['duration']) : '' ?>
+                        <?= htmlspecialchars(str_replace('+', ' + ', $m['frequency'])) ?><?= !empty($m['duration']) ? ' | ' . htmlspecialchars($m['duration']) : '' ?>
                     </div>
                     <?php if (!empty($m['note'])): ?>
                         <div class="c-med-inst"><?= htmlspecialchars($m['note']) ?></div>
@@ -380,24 +362,37 @@ $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=004
             <?php endforeach; ?>
         </div>
         
-        <!-- diagnosis and complaints -->
-        <div class="c-diagnosis">
-            <?php if (!empty($pr['diagnosis'])): ?>
-                <strong>Diagnosis</strong><span><?= nl2br(htmlspecialchars($pr['diagnosis'])) ?></span>
+        <!-- clinical notes -->
+        <div class="c-clinical-box c-complain">
+            <?php if (!empty($clinical['complain'])): ?>
+                <strong>Complain</strong><span><?= nl2br(htmlspecialchars($clinical['complain'])) ?></span>
             <?php endif; ?>
         </div>
-
-        <!-- investigations area -->
-        <div class="c-investigations">
+        <div class="c-clinical-box c-exam">
+            <?php if (!empty($clinical['on_examination'])): ?>
+                <strong>On Examination</strong><span><?= nl2br(htmlspecialchars($clinical['on_examination'])) ?></span>
+            <?php endif; ?>
+        </div>
+        <div class="c-clinical-box c-history">
+            <?php if (!empty($clinical['medical_history'])): ?>
+                <strong>M/H</strong><span><?= nl2br(htmlspecialchars($clinical['medical_history'])) ?></span>
+            <?php endif; ?>
+        </div>
+        <div class="c-clinical-box c-investigations">
             <?php if (!empty($pr['investigations'])): ?>
                 <strong>Investigations</strong><span><?= nl2br(htmlspecialchars($pr['investigations'])) ?></span>
             <?php endif; ?>
         </div>
-        
+        <div class="c-clinical-box c-diagnosis">
+            <?php if (!empty($pr['diagnosis'])): ?>
+                <strong>W/D</strong><span><?= nl2br(htmlspecialchars($pr['diagnosis'])) ?></span>
+            <?php endif; ?>
+        </div>
+
         <!-- clinical advice -->
         <div class="c-advice">
             <?php if (!empty($pr['advice'])): ?>
-                <strong>Advice / Notes</strong><span><?= nl2br(htmlspecialchars($pr['advice'])) ?></span>
+                <strong>Advice</strong><span><?= nl2br(htmlspecialchars($pr['advice'])) ?></span>
             <?php endif; ?>
         </div>
         

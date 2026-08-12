@@ -295,7 +295,7 @@ body{font-family:'Outfit',sans-serif;background:#F8FAFD;color:#1a1a2e}
               <div class="flex-1 min-w-0">
                 <p class="text-sm font-semibold text-gray-700"><?= htmlspecialchars($med['name']) ?></p>
                 <div class="flex flex-wrap gap-2 mt-1">
-                  <?php if(!empty($med['frequency'])): ?><span class="text-[10px] text-gray-500"><i class="fas fa-clock text-[8px] mr-1"></i><?= htmlspecialchars($med['frequency']) ?></span><?php endif; ?>
+                  <?php if(!empty($med['frequency'])): ?><span class="text-[10px] text-gray-500"><i class="fas fa-clock text-[8px] mr-1"></i><?= htmlspecialchars(str_replace('+', ' + ', $med['frequency'])) ?></span><?php endif; ?>
                   <?php if(!empty($med['duration'])): ?><span class="text-[10px] text-gray-500"><i class="fas fa-calendar text-[8px] mr-1"></i><?= htmlspecialchars($med['duration']) ?></span><?php endif; ?>
                   <?php if(!empty($med['note'])): ?><span class="text-[10px] text-[#ea741b]"><i class="fas fa-info-circle text-[8px] mr-1"></i><?= htmlspecialchars($med['note']) ?></span><?php endif; ?>
                 </div>
