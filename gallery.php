@@ -65,7 +65,7 @@ try {
             <div class="group relative rounded-2xl overflow-hidden border border-gray-100 bg-[#F4F7FC]">
                 <div class="aspect-[4/3] overflow-hidden">
                     <img src="<?= htmlspecialchars($img['image_path']) ?>"
-                         alt="<?= htmlspecialchars($img['caption'] ?? 'Gallery') ?>"
+                         alt="<?= htmlspecialchars($img['caption'] ?? 'Gallery') ?>" loading="lazy"
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 </div>
                 <div class="p-3">

@@ -68,14 +68,14 @@ try {
                 <div class="grid grid-cols-2 gap-0.5 bg-gray-200">
                     <div class="relative">
                         <div class="aspect-[4/3] overflow-hidden bg-[#e8f0fa]">
-                            <img src="<?= htmlspecialchars($c['before_image']) ?>" alt="Before"
+                            <img src="<?= htmlspecialchars($c['before_image']) ?>" alt="Before" loading="lazy"
                                  class="w-full h-full object-cover">
                         </div>
                         <span class="absolute bottom-2 left-2 bg-red-500 text-white text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full">Before</span>
                     </div>
                     <div class="relative">
                         <div class="aspect-[4/3] overflow-hidden bg-[#e8f0fa]">
-                            <img src="<?= htmlspecialchars($c['after_image']) ?>" alt="After"
+                            <img src="<?= htmlspecialchars($c['after_image']) ?>" alt="After" loading="lazy"
                                  class="w-full h-full object-cover">
                         </div>
                         <span class="absolute bottom-2 left-2 bg-green-500 text-white text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full">After</span>

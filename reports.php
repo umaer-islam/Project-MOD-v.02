@@ -1,4 +1,5 @@
 <?php
+$load_charts = true;
 require_once 'components/header.php';
 require_once 'components/sidebar.php';
 require_once 'components/topbar.php';

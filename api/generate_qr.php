@@ -29,6 +29,10 @@ function generateQR($data, $filename_prefix) {
 
 // If accessed directly via POST (from JS AJAX maybe)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && basename($_SERVER['PHP_SELF']) === 'generate_qr.php') {
+    session_start();
+    require_once '../components/auth_guard.php';
+    restrict_access(['admin', 'doctor']);
+    
     header('Content-Type: application/json');
     $data = $_POST['data'] ?? '';
     $id = $_POST['id'] ?? 'qr';

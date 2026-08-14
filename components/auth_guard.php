@@ -1,6 +1,16 @@
 <?php
 // Session Auth Guard — must be included before any protected operations
 if (session_status() === PHP_SESSION_NONE) {
+    // Set secure cookie parameters before session_start
+    $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+    session_set_cookie_params([
+        'lifetime' => 0,  // Session cookie (browser closes)
+        'path'     => '/',
+        'domain'   => '',
+        'secure'   => $isSecure,
+        'httponly'  => true,   // Prevent JavaScript access to cookie
+        'samesite' => 'Lax',  // CSRF protection
+    ]);
     @session_start();
 }
 

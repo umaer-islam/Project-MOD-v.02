@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'database/connection.php';
+require_once 'components/rate_limiter.php';
 
 $pid = trim($_GET['pid'] ?? '');
 $token = trim($_GET['token'] ?? '');
@@ -10,7 +11,19 @@ if (empty($pid) || $pdo === null) {
     exit;
 }
 
-// Fetch patient data with token if available
+// Rate limit patient portal access: 20 requests per 5 minutes per IP
+$rateLimiter = new RateLimiter($pdo);
+$rateCheck = $rateLimiter->check('patient_portal', 20, 300, 300);
+if (!$rateCheck['allowed']) {
+    header('Location: index.php?error=Too+many+requests.+Please+try+again+later.');
+    exit;
+}
+$rateLimiter->record('patient_portal');
+
+// Check if logged-in user is admin/doctor (bypass token requirement)
+$isAdminOrDoctor = isset($_SESSION['user_id']) && isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'doctor']);
+
+// Fetch patient data — token required for public, admin/doctor can bypass
 $patient = null;
 $prescriptions = [];
 $appointments = [];
@@ -26,8 +39,8 @@ if (!empty($token)) {
     } catch (Exception $e) {}
 }
 
-// Fallback: fetch without token (for old MOD-XXXX IDs without tokens)
-if (!$patient) {
+// Admin/doctor bypass: allow access without token
+if (!$patient && $isAdminOrDoctor) {
     try {
         $stmt = $pdo->prepare("SELECT * FROM patients WHERE patient_id = ? LIMIT 1");
         $stmt->execute([$pid]);

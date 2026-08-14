@@ -1,4 +1,5 @@
 <?php
+$load_ui_components = true;
 require_once 'components/header.php';
 restrict_access(['admin', 'doctor']);
 require_once 'components/sidebar.php';

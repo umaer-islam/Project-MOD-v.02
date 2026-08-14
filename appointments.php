@@ -1,4 +1,5 @@
 <?php
+$load_ui_components = true;
 require_once 'components/header.php';
 require_once 'components/sidebar.php';
 require_once 'components/topbar.php';
@@ -103,12 +104,30 @@ try {
                             </td>
                             <td class="whitespace-nowrap px-6 py-4">
                                 <div class="flex items-center justify-end gap-2">
-                                    <button class="w-8 h-8 rounded-lg bg-[#F4F7FC] hover:bg-green-500 hover:text-white flex items-center justify-center text-[#7c7c7c] transition-all" title="Mark Completed">
-                                        <i class="fas fa-check text-xs"></i>
-                                    </button>
-                                    <button class="w-8 h-8 rounded-lg bg-[#F4F7FC] hover:bg-[#ea741b] hover:text-white flex items-center justify-center text-[#7c7c7c] transition-all" title="Edit">
+                                    <?php if ($a['status'] !== 'Completed' && $a['status'] !== 'Cancelled'): ?>
+                                    <form method="POST" action="api/update_appointment.php" style="display:inline" onsubmit="return confirm('Mark this appointment as completed?')">
+                                        <input type="hidden" name="id" value="<?= $a['id'] ?>">
+                                        <input type="hidden" name="action" value="complete">
+                                        <button type="submit" class="w-8 h-8 rounded-lg bg-[#F4F7FC] hover:bg-green-500 hover:text-white flex items-center justify-center text-[#7c7c7c] transition-all" title="Mark Completed">
+                                            <i class="fas fa-check text-xs"></i>
+                                        </button>
+                                    </form>
+                                    <?php endif; ?>
+                                    <button type="button"
+                                            data-id="<?= $a['id'] ?>"
+                                            data-date="<?= htmlspecialchars($a['appointment_date']) ?>"
+                                            data-time="<?= htmlspecialchars($a['appointment_time'] ?? '') ?>"
+                                            data-desc="<?= htmlspecialchars($a['description'] ?? '') ?>"
+                                            onclick="openEditAppointment(this)"
+                                            class="w-8 h-8 rounded-lg bg-[#F4F7FC] hover:bg-[#ea741b] hover:text-white flex items-center justify-center text-[#7c7c7c] transition-all" title="Edit">
                                         <i class="fas fa-edit text-xs"></i>
                                     </button>
+                                    <form method="POST" action="api/delete_appointment.php" style="display:inline" onsubmit="return confirm('Are you sure you want to permanently delete this appointment? This action cannot be undone.')">
+                                        <input type="hidden" name="id" value="<?= $a['id'] ?>">
+                                        <button type="submit" class="w-8 h-8 rounded-lg bg-[#F4F7FC] hover:bg-red-500 hover:text-white flex items-center justify-center text-[#7c7c7c] transition-all" title="Delete">
+                                            <i class="fas fa-trash text-xs"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
@@ -244,4 +263,64 @@ try {
     </div>
 </div>
 
+<!-- Edit Appointment Modal -->
+<div id="editAppointmentModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm bg-[#004591]/20">
+    <div class="relative w-full max-w-md">
+        <div class="bg-white rounded-2xl shadow-2xl border border-gray-100">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+                <div>
+                    <p class="text-[10px] uppercase tracking-widest text-[#ea741b] font-bold mb-0.5">Modify</p>
+                    <h3 class="font-serif text-xl text-[#004591] font-bold">Edit Appointment</h3>
+                </div>
+                <button onclick="document.getElementById('editAppointmentModal').classList.add('hidden')"
+                        class="w-9 h-9 rounded-xl bg-[#F4F7FC] hover:bg-red-50 hover:text-red-500 flex items-center justify-center text-[#7c7c7c] transition-all">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
+            </div>
+            <form action="api/update_appointment.php" method="POST" class="p-6 space-y-4">
+                <input type="hidden" name="id" id="edit_appt_id">
+                <input type="hidden" name="action" value="edit">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-[#7c7c7c] mb-2">Date *</label>
+                        <input type="date" name="appointment_date" id="edit_appt_date" required class="w-full px-4 py-2.5 bg-[#F4F7FC] border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#004591]/20 focus:border-[#004591]">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-[#7c7c7c] mb-2">Time *</label>
+                        <input type="time" name="appointment_time" id="edit_appt_time" required class="w-full px-4 py-2.5 bg-[#F4F7FC] border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#004591]/20 focus:border-[#004591]">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-widest text-[#7c7c7c] mb-2">Purpose / Notes</label>
+                    <input type="text" name="description" id="edit_appt_desc" placeholder="e.g., Routine checkup, braces adjustment...">
+                </div>
+                <div class="pt-4 flex gap-3 border-t border-gray-100">
+                    <button type="submit"
+                            class="flex-1 py-3 bg-[#004591] hover:bg-[#ea741b] text-white text-[11px] font-bold uppercase tracking-widest rounded-xl shadow-lg transition-all duration-300">
+                        <i class="fas fa-save mr-2"></i> Save Changes
+                    </button>
+                    <button type="button" onclick="document.getElementById('editAppointmentModal').classList.add('hidden')"
+                            class="px-5 py-3 bg-[#F4F7FC] text-[#7c7c7c] text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <?php require_once 'components/footer.php'; ?>
+
+<script>
+function openEditAppointment(btn) {
+    document.getElementById('edit_appt_id').value = btn.dataset.id;
+    document.getElementById('edit_appt_date').value = btn.dataset.date;
+    document.getElementById('edit_appt_time').value = btn.dataset.time ? btn.dataset.time.substring(0, 5) : '';
+    document.getElementById('edit_appt_desc').value = btn.dataset.desc || '';
+    document.getElementById('editAppointmentModal').classList.remove('hidden');
+}
+['addAppointmentModal','editAppointmentModal'].forEach(function(id){
+    var m=document.getElementById(id);
+    if(m)m.addEventListener('click',function(e){if(e.target===m)m.classList.add('hidden');});
+});
+</script>

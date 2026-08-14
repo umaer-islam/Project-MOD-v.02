@@ -1,4 +1,5 @@
 <?php
+$load_ui_components = true;
 require_once 'components/header.php';
 restrict_access(['admin']);
 require_once 'components/sidebar.php';
@@ -66,7 +67,13 @@ try {
                         </span>
                     </div>
                     <div class="flex gap-1">
-                        <button onclick="openEditAnnouncement(<?= $a['id'] ?>, '<?= addslashes(htmlspecialchars($a['title'])) ?>', '<?= addslashes(htmlspecialchars($a['description'])) ?>', '<?= $a['visibility'] ?>', '<?= $a['expiry_date'] ?? '' ?>')"
+                        <button type="button"
+                                data-id="<?= $a['id'] ?>"
+                                data-title="<?= htmlspecialchars($a['title']) ?>"
+                                data-desc="<?= htmlspecialchars($a['description']) ?>"
+                                data-visibility="<?= htmlspecialchars($a['visibility']) ?>"
+                                data-expiry="<?= htmlspecialchars($a['expiry_date'] ?? '') ?>"
+                                onclick="openEditAnnouncement(this)"
                                 class="w-7 h-7 rounded-lg bg-[#F4F7FC] hover:bg-[#ea741b] hover:text-white flex items-center justify-center text-[#7c7c7c] transition-all opacity-0 group-hover:opacity-100" title="Edit">
                             <i class="fas fa-edit text-xs"></i>
                         </button>
@@ -196,8 +203,6 @@ try {
     </div>
 </div>
 
-<?php require_once 'components/footer.php'; ?>
-
 <!-- Edit Announcement Modal -->
 <div id="editAnnouncementModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm bg-[#004591]/20">
     <div class="relative w-full max-w-lg">
@@ -271,26 +276,23 @@ try {
     </div>
 </div>
 
+<?php require_once 'components/footer.php'; ?>
+
 <script>
-function openEditAnnouncement(id, title, desc, visibility, expiry) {
-    document.getElementById('editAnnId').value = id;
-    document.getElementById('editAnnTitle').value = title;
-    document.getElementById('editAnnDesc').value = desc;
-    const sel = document.getElementById('editAnnVisibility');
-    setModDropdown(sel, visibility);
-    setModCalendar('editAnnExpiry', expiry);
+function openEditAnnouncement(btn) {
+    document.getElementById('editAnnId').value = btn.dataset.id;
+    document.getElementById('editAnnTitle').value = btn.dataset.title;
+    document.getElementById('editAnnDesc').value = btn.dataset.desc;
+    setModDropdown(document.getElementById('editAnnVisibility'), btn.dataset.visibility);
+    setModCalendar('editAnnExpiry', btn.dataset.expiry);
     document.getElementById('editAnnouncementModal').classList.remove('hidden');
 }
-document.addEventListener('DOMContentLoaded', () => {
-    ['addAnnouncementModal','editAnnouncementModal'].forEach(id => {
-        const m = document.getElementById(id);
-        if (m) m.addEventListener('click', e => { if (e.target === m) m.classList.add('hidden'); });
-    });
-    setTimeout(() => {
-        ['successAlert','errorAlert'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) { el.style.transition = 'opacity 0.5s'; el.style.opacity = 0; setTimeout(() => el.remove(), 500); }
-        });
-    }, 5000);
+document.querySelectorAll('.mod-dropdown[data-mod-init]').forEach(function(d){d.removeAttribute('data-mod-init');d._modInit=false;});
+document.querySelectorAll('.mod-calendar[data-cal-init]').forEach(function(c){c.removeAttribute('data-cal-init');c._calInit=false;});
+document.querySelectorAll('.mod-dropdown').forEach(initModDropdown);
+document.querySelectorAll('.mod-calendar').forEach(initModCalendar);
+['addAnnouncementModal','editAnnouncementModal'].forEach(function(id){
+    var m=document.getElementById(id);
+    if(m)m.addEventListener('click',function(e){if(e.target===m)m.classList.add('hidden');});
 });
 </script>

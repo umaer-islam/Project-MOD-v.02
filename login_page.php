@@ -62,9 +62,6 @@ if (isset($_GET['error']) && isset($_GET['msg'])) {
             color: #9ca3af;
             transition: color 0.3s ease;
         }
-        .login-input:focus + .input-icon {
-            /* Handled in HTML with peer pattern */
-        }
         @keyframes fade-in-up {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -73,12 +70,253 @@ if (isset($_GET['error']) && isset($_GET['msg'])) {
             animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
         }
+
+        /* ── Mobile-Only Redesign ── */
+        @media (max-width: 1023px) {
+            body { overflow: auto !important; background: #001630 !important; }
+            .login-desktop-wrap { display: none !important; }
+
+            .login-mobile-wrap {
+                display: flex !important;
+                min-height: 100dvh;
+                flex-direction: column;
+                position: relative;
+                overflow: hidden;
+            }
+
+            /* Animated gradient background */
+            .login-mobile-bg {
+                position: fixed; inset: 0; z-index: 0;
+                background: linear-gradient(135deg, #001630 0%, #002a60 40%, #001630 100%);
+            }
+            .login-mobile-bg::before {
+                content: ''; position: absolute; top: -40%; right: -30%;
+                width: 500px; height: 500px; border-radius: 50%;
+                background: radial-gradient(circle, rgba(234,116,27,0.15) 0%, transparent 70%);
+                animation: mobBlob1 8s ease-in-out infinite alternate;
+            }
+            .login-mobile-bg::after {
+                content: ''; position: absolute; bottom: -30%; left: -20%;
+                width: 400px; height: 400px; border-radius: 50%;
+                background: radial-gradient(circle, rgba(0,69,145,0.2) 0%, transparent 70%);
+                animation: mobBlob2 10s ease-in-out infinite alternate;
+            }
+            @keyframes mobBlob1 {
+                0% { transform: translate(0, 0) scale(1); }
+                100% { transform: translate(-40px, 30px) scale(1.15); }
+            }
+            @keyframes mobBlob2 {
+                0% { transform: translate(0, 0) scale(1); }
+                100% { transform: translate(30px, -40px) scale(1.1); }
+            }
+
+            /* Grid pattern overlay */
+            .login-mobile-grid {
+                position: fixed; inset: 0; z-index: 1;
+                background-image:
+                    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+                background-size: 40px 40px;
+                pointer-events: none;
+            }
+
+            /* Mobile content */
+            .login-mobile-content {
+                position: relative; z-index: 2;
+                flex: 1; display: flex; flex-direction: column;
+                padding: 0 24px;
+                padding-top: max(env(safe-area-inset-top, 0px), 20px);
+                padding-bottom: max(env(safe-area-inset-bottom, 0px), 24px);
+            }
+
+            /* Mobile brand header */
+            .mob-brand {
+                display: flex; align-items: center; gap: 14px;
+                padding: 20px 0 8px;
+            }
+            .mob-brand-logo {
+                width: 48px; height: 48px; border-radius: 14px;
+                background: rgba(255,255,255,0.08);
+                border: 1px solid rgba(255,255,255,0.1);
+                backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+                display: flex; align-items: center; justify-content: center;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            }
+            .mob-brand-logo img { width: 28px; height: 28px; object-fit: contain; }
+            .mob-brand-text h1 {
+                font-family: 'Playfair Display', serif;
+                color: #fff; font-size: 18px; font-weight: 700; line-height: 1.2;
+            }
+            .mob-brand-text h1 span { color: #ea741b; }
+            .mob-brand-text p {
+                color: rgba(255,255,255,0.4); font-size: 9px; font-weight: 700;
+                text-transform: uppercase; letter-spacing: 0.2em; margin-top: 2px;
+            }
+
+            /* Mobile glass card */
+            .mob-card {
+                margin-top: 28px;
+                background: rgba(255,255,255,0.06);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 24px;
+                padding: 32px 24px;
+                backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+                box-shadow:
+                    0 8px 32px rgba(0,0,0,0.3),
+                    inset 0 1px 0 rgba(255,255,255,0.06);
+            }
+
+            .mob-greeting { margin-bottom: 28px; }
+            .mob-greeting .mob-greeting-tag {
+                display: inline-flex; align-items: center; gap: 6px;
+                background: rgba(234,116,27,0.12); border: 1px solid rgba(234,116,27,0.2);
+                border-radius: 100px; padding: 5px 14px;
+                font-size: 9px; font-weight: 700; text-transform: uppercase;
+                letter-spacing: 0.15em; color: #ea741b; margin-bottom: 16px;
+            }
+            .mob-greeting .mob-greeting-tag i { font-size: 8px; }
+            .mob-greeting h2 {
+                font-family: 'Playfair Display', serif;
+                color: #fff; font-size: 28px; font-weight: 700; line-height: 1.2; margin-bottom: 6px;
+            }
+            .mob-greeting p { color: rgba(255,255,255,0.45); font-size: 13px; line-height: 1.5; }
+
+            /* Mobile inputs */
+            .mob-field { margin-bottom: 18px; }
+            .mob-field label {
+                display: block; font-size: 10px; font-weight: 700;
+                text-transform: uppercase; letter-spacing: 0.15em;
+                color: rgba(255,255,255,0.4); margin-bottom: 8px; padding-left: 2px;
+            }
+            .mob-input-wrap {
+                position: relative; display: flex; align-items: center;
+            }
+            .mob-input-wrap .mob-input-icon {
+                position: absolute; left: 16px; color: rgba(255,255,255,0.25);
+                font-size: 14px; pointer-events: none;
+                transition: color 0.3s ease; z-index: 2;
+            }
+            .mob-input {
+                width: 100%; min-height: 52px;
+                background: rgba(255,255,255,0.05);
+                border: 1.5px solid rgba(255,255,255,0.08);
+                border-radius: 14px;
+                padding: 14px 48px 14px 46px;
+                font-size: 15px; color: #fff;
+                font-family: 'Outfit', sans-serif;
+                outline: none; transition: all 0.3s ease;
+                -webkit-appearance: none;
+            }
+            .mob-input::placeholder { color: rgba(255,255,255,0.2); }
+            .mob-input:focus {
+                background: rgba(255,255,255,0.08);
+                border-color: rgba(234,116,27,0.5);
+                box-shadow: 0 0 0 3px rgba(234,116,27,0.1);
+            }
+            .mob-input:focus ~ .mob-input-icon { color: #ea741b; }
+
+            /* Password toggle */
+            .mob-pw-toggle {
+                position: absolute; right: 8px;
+                width: 36px; height: 36px; border-radius: 10px;
+                background: transparent; border: none;
+                color: rgba(255,255,255,0.3); font-size: 14px;
+                display: flex; align-items: center; justify-content: center;
+                cursor: pointer; transition: all 0.2s ease; z-index: 2;
+            }
+            .mob-pw-toggle:hover { color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.05); }
+            .mob-pw-toggle:active { transform: scale(0.9); }
+
+            /* Forgot link row */
+            .mob-meta {
+                display: flex; align-items: center; justify-content: space-between;
+                margin-bottom: 24px; margin-top: -4px;
+            }
+            .mob-meta a {
+                color: rgba(255,255,255,0.4); font-size: 12px; font-weight: 500;
+                text-decoration: none; transition: color 0.2s;
+            }
+            .mob-meta a:hover { color: #ea741b; }
+
+            /* Mobile submit button */
+            .mob-submit {
+                width: 100%; min-height: 54px;
+                background: linear-gradient(135deg, #ea741b 0%, #cf5e0e 100%);
+                border: none; border-radius: 14px;
+                color: #fff; font-size: 12px; font-weight: 700;
+                text-transform: uppercase; letter-spacing: 0.15em;
+                cursor: pointer; position: relative; overflow: hidden;
+                display: flex; align-items: center; justify-content: center; gap: 10px;
+                box-shadow: 0 4px 24px rgba(234,116,27,0.35);
+                transition: all 0.3s ease;
+                -webkit-appearance: none;
+            }
+            .mob-submit:active { transform: scale(0.98); }
+            .mob-submit::after {
+                content: ''; position: absolute; inset: 0;
+                background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+                pointer-events: none;
+            }
+            .mob-submit.spinner-state {
+                opacity: 0.85; pointer-events: none;
+            }
+
+            /* Error message */
+            .mob-error {
+                display: flex; align-items: center; gap: 10px;
+                background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
+                border-radius: 14px; padding: 14px 16px; margin-bottom: 20px;
+                animation: mobShake 0.4s ease;
+            }
+            .mob-error i { color: #ef4444; font-size: 14px; flex-shrink: 0; }
+            .mob-error span { color: #fca5a5; font-size: 13px; font-weight: 500; }
+            @keyframes mobShake {
+                0%, 100% { transform: translateX(0); }
+                20% { transform: translateX(-6px); }
+                40% { transform: translateX(6px); }
+                60% { transform: translateX(-4px); }
+                80% { transform: translateX(4px); }
+            }
+
+            /* Mobile footer */
+            .mob-footer {
+                margin-top: 32px; padding-top: 20px;
+                border-top: 1px solid rgba(255,255,255,0.06);
+                text-align: center;
+            }
+            .mob-footer-badges {
+                display: flex; align-items: center; justify-content: center;
+                gap: 16px; margin-bottom: 16px;
+            }
+            .mob-badge {
+                display: inline-flex; align-items: center; gap: 5px;
+                font-size: 9px; font-weight: 700; text-transform: uppercase;
+                letter-spacing: 0.1em; color: rgba(255,255,255,0.25);
+            }
+            .mob-badge i { font-size: 8px; color: rgba(234,116,27,0.4); }
+            .mob-badge-dot {
+                width: 3px; height: 3px; border-radius: 50%;
+                background: rgba(255,255,255,0.15);
+            }
+            .mob-back-link {
+                display: inline-flex; align-items: center; gap: 6px;
+                font-size: 11px; color: rgba(255,255,255,0.3);
+                text-decoration: none; font-weight: 500;
+                transition: color 0.2s;
+            }
+            .mob-back-link:hover { color: rgba(255,255,255,0.6); }
+            .mob-back-link i { font-size: 10px; }
+        }
+
+        /* Desktop: hide mobile layout */
+        .login-mobile-wrap { display: none; }
     </style>
 </head>
 <body class="font-sans antialiased overflow-hidden bg-white text-navy">
 <!-- Developed by Umaer Islam (https://umaerislam.com) -->
 
-    <div class="flex min-h-screen">
+    <!-- ═══ DESKTOP LAYOUT (unchanged) ═══ -->
+    <div class="flex min-h-screen login-desktop-wrap">
         
         <!-- Left Banner (Image) -->
         <div class="hidden lg:flex w-1/2 relative bg-navy items-center justify-center overflow-hidden">
@@ -167,14 +405,130 @@ if (isset($_GET['error']) && isset($_GET['msg'])) {
             
         </div>
     </div>
+    <!-- /Desktop Layout -->
+
+    <!-- ═══ MOBILE LAYOUT ═══ -->
+    <div class="login-mobile-wrap">
+        <div class="login-mobile-bg"></div>
+        <div class="login-mobile-grid"></div>
+
+        <div class="login-mobile-content">
+            <!-- Brand -->
+            <div class="mob-brand">
+                <div class="mob-brand-logo">
+                    <img src="Logo.png" alt="Logo">
+                </div>
+                <div class="mob-brand-text">
+                    <h1>Mamun's <span>Ortho</span></h1>
+                    <p>Clinical Portal</p>
+                </div>
+            </div>
+
+            <!-- Glass Card -->
+            <div class="mob-card">
+                <div class="mob-greeting">
+                    <div class="mob-greeting-tag">
+                        <i class="fas fa-shield-halved"></i> Secure Login
+                    </div>
+                    <h2>Welcome<br>Back</h2>
+                    <p>Sign in to access your dashboard</p>
+                </div>
+
+                <?php if ($error_msg): ?>
+                <div class="mob-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span><?= $error_msg ?></span>
+                </div>
+                <?php endif; ?>
+
+                <form action="login.php" method="POST" id="mobLoginForm">
+                    <div class="mob-field">
+                        <label for="mob-email">Email Address</label>
+                        <div class="mob-input-wrap">
+                            <i class="fas fa-envelope mob-input-icon"></i>
+                            <input class="mob-input" type="email" id="mob-email" name="email"
+                                   placeholder="doctor@mamunsdental.com" required autocomplete="email"
+                                   value="<?= isset($_GET['error']) ? htmlspecialchars($_POST['email'] ?? '') : '' ?>">
+                        </div>
+                    </div>
+
+                    <div class="mob-field">
+                        <label for="mob-password">Password</label>
+                        <div class="mob-input-wrap">
+                            <i class="fas fa-lock mob-input-icon"></i>
+                            <input class="mob-input" type="password" id="mob-password" name="password"
+                                   placeholder="Enter your password" required autocomplete="current-password"
+                                   style="padding-right: 52px;">
+                            <button type="button" class="mob-pw-toggle" onclick="toggleMobPw()" aria-label="Toggle password visibility">
+                                <i class="fas fa-eye" id="mobPwEye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mob-meta">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" name="remember" style="width:16px;height:16px;border-radius:4px;accent-color:#ea741b;">
+                            <span style="color:rgba(255,255,255,0.4);font-size:12px;">Remember me</span>
+                        </label>
+                        <a href="#">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" id="mobLoginBtn" class="mob-submit">
+                        <span id="mobBtnText">Sign In</span>
+                        <i class="fas fa-arrow-right" id="mobBtnIcon"></i>
+                        <svg id="mobBtnSpinner" class="hidden animate-spin w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </button>
+                </form>
+
+                <div class="mob-footer">
+                    <div class="mob-footer-badges">
+                        <span class="mob-badge"><i class="fas fa-certificate"></i> BMDC</span>
+                        <span class="mob-badge-dot"></span>
+                        <span class="mob-badge"><i class="fas fa-lock"></i> SSL</span>
+                        <span class="mob-badge-dot"></span>
+                        <span class="mob-badge"><i class="fas fa-shield-halved"></i> Encrypted</span>
+                    </div>
+                    <a href="index.php" class="mob-back-link">
+                        <i class="fas fa-arrow-left"></i> Back to website
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
+        // Desktop form
         document.getElementById('loginForm').addEventListener('submit', function() {
             document.getElementById('btnText').textContent = 'Authenticating...';
             document.getElementById('btnIcon').classList.add('hidden');
             document.getElementById('btnSpinner').classList.remove('hidden');
             document.getElementById('loginBtn').classList.add('opacity-90', 'cursor-not-allowed', 'bg-navy');
             document.getElementById('loginBtn').classList.remove('hover:bg-gold', 'hover:-translate-y-0.5');
+        });
+
+        // Mobile password toggle
+        function toggleMobPw() {
+            const pw = document.getElementById('mob-password');
+            const eye = document.getElementById('mobPwEye');
+            if (pw.type === 'password') {
+                pw.type = 'text';
+                eye.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                pw.type = 'password';
+                eye.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // Mobile form submit
+        document.getElementById('mobLoginForm').addEventListener('submit', function() {
+            const btn = document.getElementById('mobLoginBtn');
+            document.getElementById('mobBtnText').textContent = 'Signing in...';
+            document.getElementById('mobBtnIcon').classList.add('hidden');
+            document.getElementById('mobBtnSpinner').classList.remove('hidden');
+            btn.classList.add('spinner-state');
         });
     </script>
 </body>

@@ -51,8 +51,6 @@ require_once __DIR__ . '/assets.php';
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?= asset('assets/css/style.css') ?>">
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- Developer Attribution -->
 <meta name="developer" content="Umaer Islam — Web Developer & Designer — https://umaerislam.com">

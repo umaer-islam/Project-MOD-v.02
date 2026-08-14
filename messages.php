@@ -63,12 +63,23 @@ try {
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 text-[#7c7c7c] align-top text-sm leading-relaxed max-w-md whitespace-pre-wrap"><?= htmlspecialchars($msg['message'] ?: 'No message provided.') ?></td>
                             <td class="whitespace-nowrap px-6 py-4 align-top text-right">
-                                <form action="api/delete_message.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this message?');">
-                                    <input type="hidden" name="id" value="<?= htmlspecialchars($msg['id']) ?>">
-                                    <button type="submit" class="text-red-500 hover:text-red-700 transition-colors bg-red-50 hover:bg-red-100 p-2 rounded-lg" title="Delete Message">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
+                                <div class="flex items-center justify-end gap-1.5">
+                                    <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $msg['phone']) ?>?text=<?= urlencode('Hello ' . $msg['name'] . ',%0A%0AThank you for contacting Mamun\'s Ortho Dental regarding: ' . ($msg['service'] ?: 'your inquiry') . '. How can we help you?') ?>" 
+                                       target="_blank" 
+                                       class="w-8 h-8 rounded-lg bg-green-50 hover:bg-green-500 hover:text-white flex items-center justify-center text-green-600 transition-all" title="Reply via WhatsApp">
+                                        <i class="fab fa-whatsapp text-xs"></i>
+                                    </a>
+                                    <a href="tel:<?= htmlspecialchars($msg['phone']) ?>" 
+                                       class="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-500 hover:text-white flex items-center justify-center text-blue-600 transition-all" title="Call">
+                                        <i class="fas fa-phone text-xs"></i>
+                                    </a>
+                                    <form action="api/delete_message.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this message?');" class="inline">
+                                        <input type="hidden" name="id" value="<?= htmlspecialchars($msg['id']) ?>">
+                                        <button type="submit" class="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-500 hover:text-white flex items-center justify-center text-red-500 transition-all" title="Delete">
+                                            <i class="fas fa-trash-alt text-xs"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         <?php endforeach; ?>

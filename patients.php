@@ -1,4 +1,5 @@
 <?php
+$load_ui_components = true;
 require_once 'components/header.php';
 require_once 'components/sidebar.php';
 require_once 'components/topbar.php';
@@ -110,11 +111,17 @@ try {
                             <td class="whitespace-nowrap px-6 py-4 text-[#7c7c7c] text-sm"><?= date('M d, Y', strtotime($p['created_at'])) ?></td>
                             <td class="whitespace-nowrap px-6 py-4">
                                 <div class="flex items-center justify-end gap-2">
-                                    <a href="patient_record.php?pid=<?= $p['patient_id'] ?>" target="_blank"
+                                    <a href="patient_record.php?pid=<?= urlencode($p['patient_id']) ?>&token=<?= urlencode($p['access_token'] ?? '') ?>" target="_blank"
                                        class="w-8 h-8 rounded-lg bg-[#F4F7FC] hover:bg-[#004591] hover:text-white flex items-center justify-center text-[#004591] transition-all" title="View QR Profile">
                                         <i class="fas fa-qrcode text-xs"></i>
                                     </a>
-                                    <button onclick="openEditPatient(<?= $p['id'] ?>, '<?= htmlspecialchars(addslashes($p['name'])) ?>', '<?= htmlspecialchars(addslashes($p['phone'])) ?>', <?= (int)$p['age'] ?>, '<?= $p['gender'] ?>', '<?= htmlspecialchars(addslashes($p['address'])) ?>')"
+                                    <button onclick="openEditPatient(this)"
+                                            data-id="<?= $p['id'] ?>"
+                                            data-name="<?= htmlspecialchars($p['name']) ?>"
+                                            data-phone="<?= htmlspecialchars($p['phone']) ?>"
+                                            data-age="<?= (int)$p['age'] ?>"
+                                            data-gender="<?= htmlspecialchars($p['gender']) ?>"
+                                            data-address="<?= htmlspecialchars($p['address'] ?? '') ?>"
                                             class="w-8 h-8 rounded-lg bg-[#F4F7FC] hover:bg-[#ea741b] hover:text-white flex items-center justify-center text-[#7c7c7c] transition-all" title="Edit">
                                         <i class="fas fa-edit text-xs"></i>
                                     </button>
@@ -285,13 +292,13 @@ try {
 </div>
 
 <script>
-function openEditPatient(id, name, phone, age, gender, address) {
-    document.getElementById('editId').value = id;
-    document.getElementById('editName').value = name;
-    document.getElementById('editPhone').value = phone;
-    document.getElementById('editAge').value = age;
-    document.getElementById('editAddress').value = address;
-    setModDropdown('editGender', gender);
+function openEditPatient(btn) {
+    document.getElementById('editId').value = btn.dataset.id;
+    document.getElementById('editName').value = btn.dataset.name;
+    document.getElementById('editPhone').value = btn.dataset.phone;
+    document.getElementById('editAge').value = btn.dataset.age;
+    document.getElementById('editAddress').value = btn.dataset.address;
+    setModDropdown('editGender', btn.dataset.gender);
     document.getElementById('editPatientModal').classList.remove('hidden');
 }
 document.addEventListener('DOMContentLoaded', () => {

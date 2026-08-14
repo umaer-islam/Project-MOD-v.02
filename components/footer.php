@@ -11,8 +11,10 @@
 </div> <!-- /flex h-screen from header.php -->
 
 <!-- Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js" defer></script>
+<?php if (!empty($load_charts)): ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<?php endif; ?>
 
 <!-- Core UI JS -->
 <script>
@@ -26,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!userMenuBtn.contains(e.target)) userMenu.classList.add('hidden');
         });
     }
-
+<?php if (!empty($load_ui_components)): ?>
     // Init all custom dropdowns
     document.querySelectorAll('.mod-dropdown').forEach(initModDropdown);
     // Init all custom calendars
@@ -39,8 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.mod-calendar:not([data-cal-init])').forEach(initModCalendar);
       document.querySelectorAll('.mod-time:not([data-time-init])').forEach(initModTime);
     }).observe(document.body, { childList: true, subtree: true });
+<?php endif; ?>
 });
 
+<?php if (!empty($load_ui_components)): ?>
 /* ═══════════════════════════════════════════════════════
    CUSTOM DROPDOWN — Reusable
    ═══════════════════════════════════════════════════════ */
@@ -357,9 +361,12 @@ function setModTime(idOrEl, value) {
     }
     input.dispatchEvent(new Event('change', { bubbles: true }));
 }
+<?php endif; ?>
 </script>
 
-<script src="<?= asset('assets/js/main.js') ?>"></script>
-<script src="<?= asset('assets/js/charts.js') ?>"></script>
+<script src="<?= asset('assets/js/main.js') ?>" defer></script>
+<?php if (!empty($load_charts)): ?>
+<script src="<?= asset('assets/js/charts.js') ?>" defer></script>
+<?php endif; ?>
 </body>
 </html>

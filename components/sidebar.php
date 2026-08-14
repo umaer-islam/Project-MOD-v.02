@@ -33,7 +33,7 @@
             ['url' => 'dashboard.php',    'icon' => 'fa-chart-line',          'label' => 'Dashboard',       'roles' => ['admin', 'doctor', 'receptionist'], 'group' => ''],
             ['url' => 'patients.php',     'icon' => 'fa-users',               'label' => 'Patients',        'roles' => ['admin', 'doctor', 'receptionist'], 'group' => ''],
             ['url' => 'appointments.php', 'icon' => 'fa-calendar-check',      'label' => 'Appointments',    'roles' => ['admin', 'doctor', 'receptionist'], 'group' => ''],
-            ['url' => 'payments.php',     'icon' => 'fa-file-invoice-dollar', 'label' => 'Payments',        'roles' => ['admin', 'doctor', 'receptionist'], 'group' => ''],
+            ['url' => 'cash_memos.php',    'icon' => 'fa-file-invoice-dollar', 'label' => 'Cash Memos',      'roles' => ['admin', 'doctor', 'receptionist'], 'group' => ''],
             ['url' => 'messages.php',     'icon' => 'fa-envelope-open-text',  'label' => 'Messages',        'roles' => ['admin', 'doctor', 'receptionist'], 'group' => ''],
             ['url' => 'testimonials.php', 'icon' => 'fa-star',                'label' => 'Testimonials',    'roles' => ['admin', 'doctor', 'receptionist'], 'group' => ''],
             ['url' => 'reports.php',      'icon' => 'fa-chart-pie',           'label' => 'Reports',         'roles' => ['admin', 'doctor', 'receptionist'], 'group' => ''],

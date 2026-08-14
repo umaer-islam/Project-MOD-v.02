@@ -5,6 +5,11 @@ require_once 'database/connection.php';
 // Auth check
 if (!isset($_SESSION['user_id'])) { header('Location: login_page.php'); exit; }
 
+// Prevent browser from caching a stale error response
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 $id = (int)($_GET['id'] ?? 0);
 if (!$id) { echo "Bill not found."; exit; }
 
@@ -136,7 +141,6 @@ try {
                             </td>
                             <td class="py-3 text-right font-bold text-gray-700">৳<?= number_format($bill['amount'], 2) ?></td>
                         </tr>
-                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

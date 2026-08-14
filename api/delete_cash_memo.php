@@ -7,8 +7,13 @@ restrict_access(['admin']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int)($_POST['id'] ?? 0);
+
+    // Determine redirect target based on referer
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
+    $redirectBase = '../cash_memos.php';
+
     if (!$id) {
-        header("Location: ../payments.php?tab=memos&error=Invalid+cash+memo");
+        header("Location: {$redirectBase}&error=Invalid+cash+memo");
         exit;
     }
     try {
@@ -25,12 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             log_activity($pdo, 'DELETE_CASH_MEMO', "Deleted cash memo {$info['memo_number']} for {$info['customer_name']} — Total: ৳{$info['grand_total']}");
         }
 
-        header("Location: ../payments.php?tab=memos&success=" . urlencode("Cash memo deleted."));
+        header("Location: {$redirectBase}&success=" . urlencode("Cash memo deleted."));
         exit;
     } catch (PDOException) {
-        header("Location: ../payments.php?tab=memos&error=" . urlencode("Cannot delete cash memo."));
+        header("Location: {$redirectBase}&error=" . urlencode("Cannot delete cash memo."));
         exit;
     }
 }
-header("Location: ../payments.php?tab=memos");
+header("Location: ../cash_memos.php");
 exit;

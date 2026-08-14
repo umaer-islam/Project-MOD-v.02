@@ -4,26 +4,62 @@ require_once 'database/connection.php';
 require_once 'components/activity_logger.php';
 require_once 'components/assets.php';
 require_once 'components/cache.php';
+require_once 'components/rate_limiter.php';
+require_once 'components/math_captcha.php';
 
 //  Contact Form Handler 
-$contact_success = false;
-$contact_error   = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
     $name    = trim($_POST['contact_name']    ?? '');
+    $country = trim($_POST['contact_country_code'] ?? '+880');
     $phone   = trim($_POST['contact_phone']   ?? '');
     $service = trim($_POST['contact_service'] ?? '');
     $message = trim($_POST['contact_message'] ?? '');
+    $captcha_key    = $_POST['captcha_key'] ?? '';
+    $captcha_answer = $_POST['captcha_answer'] ?? '';
+
+    /* Combine country code + phone if phone doesn't already start with + */
+    if ($phone && strpos($phone, '+') === false) {
+        $phone = $country . $phone;
+    }
+
+    $redirectTo = '?#contact';
     if ($name && $phone) {
-        if ($pdo !== null) {
-            try {
-                $pdo->prepare("INSERT INTO contact_inquiries (name,phone,service,message) VALUES (?,?,?,?)")
-                    ->execute([$name,$phone,$service,$message]);
-                log_activity($pdo, 'VISITOR_CONTACT', "Contact form submitted by {$name} (Phone: {$phone}, Service: {$service})", null, 'Public Visitor');
-                $contact_success = true;
-            } catch (Exception $e) { $contact_error = 'Database error. Could not submit inquiry.'; }
+        // Verify CAPTCHA
+        if (!MathCaptcha::verify($captcha_key, $captcha_answer)) {
+            header('Location: ' . $redirectTo . '&error=' . urlencode('Incorrect CAPTCHA answer. Please try again.'));
+            exit;
+        } else {
+            // Rate limit: 3 submissions per 10 minutes per IP
+            $rateLimiter = new RateLimiter($pdo);
+            $rateCheck = $rateLimiter->check('contact_form', 3, 600, 600);
+            if (!$rateCheck['allowed']) {
+                $minutes = ceil($rateCheck['retry_after'] / 60);
+                header('Location: ' . $redirectTo . '&error=' . urlencode("Too many submissions. Please try again in {$minutes} minutes."));
+                exit;
+            } else {
+                $rateLimiter->record('contact_form');
+                if ($pdo !== null) {
+                    try {
+                        $pdo->prepare("INSERT INTO contact_inquiries (name,phone,service,message) VALUES (?,?,?,?)")
+                            ->execute([$name,$phone,$service,$message]);
+                        log_activity($pdo, 'VISITOR_CONTACT', "Contact form submitted by {$name} (Phone: {$phone}, Service: {$service})", null, 'Public Visitor');
+                        header('Location: ' . $redirectTo . '&success=' . urlencode('Request sent successfully! We will contact you within 30 minutes.'));
+                        exit;
+                    } catch (Exception $e) {
+                        header('Location: ' . $redirectTo . '&error=' . urlencode('Database error. Could not submit inquiry.'));
+                        exit;
+                    }
+                }
+            }
         }
-    } else { $contact_error = 'Please fill in your name and phone number.'; }
+    } else {
+        header('Location: ' . $redirectTo . '&error=' . urlencode('Please fill in your name and phone number.'));
+        exit;
+    }
 }
+
+// Generate CAPTCHA for the form
+$captcha = MathCaptcha::generate();
 
 //  Runtime table creation (safe, idempotent) 
 if ($pdo) {
@@ -173,7 +209,7 @@ if (empty($testimonials)) $testimonials = [
 <link rel="stylesheet" href="<?= asset('assets/css/loader.css') ?>">
 
 <!--  TAILWIND CONFIG  -->
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com" defer></script>
 <script>
 tailwind.config = { theme: { extend: {
     colors: { navy:'#004591','navy-dark':'#003070',gold:'#ea741b' },
@@ -396,6 +432,10 @@ tailwind.config = { theme: { extend: {
 .form-input::placeholder { color:rgba(255,255,255,.4); }
 .form-input:focus { border-color:#ea741b; background:rgba(255,255,255,.12); box-shadow:0 0 0 3px rgba(234,116,27,.15); }
 .form-select option { color:#004591; background:#fff; }
+
+/* Lazy section loading */
+.lazy-section { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.lazy-section.lazy-section--visible { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
@@ -831,7 +871,7 @@ tailwind.config = { theme: { extend: {
 </section>
 
 <!--  GALLERY  -->
-<section id="gallery" class="py-28 bg-white">
+<section id="gallery" class="py-28 bg-white lazy-section">
   <div class="max-w-7xl mx-auto px-5 lg:px-8">
     <div class="text-center mb-16 reveal"><div class="gold-bar mx-auto mb-5"></div><p class="text-[#ea741b] text-[11px] font-bold uppercase tracking-[.3em] mb-3">Inside Our Clinic</p><h2 class="font-serif text-4xl lg:text-5xl font-bold text-[#004591]">Clinic Gallery</h2><p class="text-gray-500 mt-4 max-w-xl mx-auto">A modern, clean environment designed for your comfort and safety.</p></div>
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" data-stagger style="grid-auto-rows:160px">
@@ -948,7 +988,7 @@ tailwind.config = { theme: { extend: {
 
 
 <!-- TESTIMONIALS -->
-<section id="testimonials" class="py-28 bg-[#F8FAFD]">
+<section id="testimonials" class="py-28 bg-[#F8FAFD] lazy-section">
   <div class="max-w-7xl mx-auto px-5 lg:px-8">
     <div class="text-center mb-16 reveal"><div class="gold-bar mx-auto mb-5"></div><p class="text-[#ea741b] text-[11px] font-bold uppercase tracking-[.3em] mb-3">Patient Stories</p><h2 class="font-serif text-4xl lg:text-5xl font-bold text-[#004591]">Real Smiles, Real Stories</h2><p class="text-gray-500 mt-4 max-w-xl mx-auto">Hear from the patients who trusted us with their smiles.</p></div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-stagger>
@@ -968,7 +1008,7 @@ tailwind.config = { theme: { extend: {
 </section>
 
 <!-- BEFORE & AFTER -->
-<section id="beforeafter" class="py-28 bg-white">
+<section id="beforeafter" class="py-28 bg-white lazy-section">
   <div class="max-w-7xl mx-auto px-5 lg:px-8">
     <div class="text-center mb-16 reveal"><div class="gold-bar mx-auto mb-5"></div><p class="text-[#ea741b] text-[11px] font-bold uppercase tracking-[.3em] mb-3">Real Transformations</p><h2 class="font-serif text-4xl lg:text-5xl font-bold text-[#004591]">Before &amp; After</h2><p class="text-gray-500 mt-4 max-w-xl mx-auto">See the real results our patients have experienced with our treatments.</p></div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" data-stagger>
@@ -976,8 +1016,8 @@ tailwind.config = { theme: { extend: {
         <?php foreach($cases as $c): ?>
         <div class="ba-card">
           <div class="grid grid-cols-2 gap-0.5 bg-gray-200">
-            <div class="relative overflow-hidden"><div class="aspect-[4/3]"><img src="<?=htmlspecialchars($c['before_image'])?>" alt="Before" class="w-full h-full object-cover"></div><span class="absolute bottom-2 left-2 bg-red-500 text-white text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full">Before</span></div>
-            <div class="relative overflow-hidden"><div class="aspect-[4/3]"><img src="<?=htmlspecialchars($c['after_image'])?>" alt="After" class="w-full h-full object-cover"></div><span class="absolute bottom-2 left-2 bg-green-500 text-white text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full">After</span></div>
+            <div class="relative overflow-hidden"><div class="aspect-[4/3]"><img src="<?=htmlspecialchars($c['before_image'])?>" alt="Before" loading="lazy" class="w-full h-full object-cover"></div><span class="absolute bottom-2 left-2 bg-red-500 text-white text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full">Before</span></div>
+            <div class="relative overflow-hidden"><div class="aspect-[4/3]"><img src="<?=htmlspecialchars($c['after_image'])?>" alt="After" loading="lazy" class="w-full h-full object-cover"></div><span class="absolute bottom-2 left-2 bg-green-500 text-white text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full">After</span></div>
           </div>
           <div class="p-6">
             <h3 class="font-serif text-lg font-bold text-[#004591] mb-2"><?=htmlspecialchars($c['title'])?></h3>
@@ -1181,18 +1221,7 @@ $status_dot = $is_open ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400';
             <p class="text-white/40 text-sm">Fill in your details, and we'll get back to you shortly.</p>
           </div>
 
-          <?php if($contact_success): ?>
-          <div class="flex items-start gap-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4 mb-6">
-            <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-check text-emerald-400 text-xs"></i></div>
-            <div><p class="text-emerald-400 font-bold text-sm">Request Successfully Sent!</p><p class="text-emerald-400/70 text-xs mt-1">Our team will contact you within 30 minutes.</p></div>
-          </div>
-          <?php endif; ?>
-          
-          <?php if($contact_error): ?>
-          <div class="flex items-center gap-3 bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4 mb-6"><i class="fas fa-exclamation-circle text-rose-400"></i><p class="text-rose-400/90 text-sm"><?=htmlspecialchars($contact_error)?></p></div>
-          <?php endif; ?>
-
-          <form method="POST" class="space-y-5">
+          <form method="POST" class="space-y-5" id="contact">
             <input type="hidden" name="contact_submit" value="1">
             
             <div class="relative group">
@@ -1200,11 +1229,37 @@ $status_dot = $is_open ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400';
               <label for="contact_name" class="absolute left-5 top-4 text-white/30 text-xs uppercase tracking-wider transition-all peer-placeholder-shown:text-[14px] peer-placeholder-shown:top-4 peer-placeholder-shown:normal-case peer-focus:text-xs peer-focus:top-2 peer-focus:uppercase peer-focus:text-[#ea741b] pointer-events-none font-medium">Your Full Name</label>
             </div>
 
-            <div class="grid sm:grid-cols-2 gap-5">
-              <div class="relative group">
-                <input type="tel" name="contact_phone" id="contact_phone" placeholder=" " required class="block w-full bg-white/[0.02] border border-white/[0.08] rounded-2xl px-5 pt-6 pb-2 text-white text-[15px] outline-none focus:bg-white/[0.04] focus:border-[#ea741b]/50 transition-all peer">
-                <label for="contact_phone" class="absolute left-5 top-4 text-white/30 text-xs uppercase tracking-wider transition-all peer-placeholder-shown:text-[14px] peer-placeholder-shown:top-4 peer-placeholder-shown:normal-case peer-focus:text-xs peer-focus:top-2 peer-focus:uppercase peer-focus:text-[#ea741b] pointer-events-none font-medium">Phone Number</label>
+            <div class="relative group">
+              <div class="mod-dropdown relative" id="contactCountryCode" data-name="contact_country_code" data-placeholder="Code" style="position:absolute;left:0;top:0;bottom:0;z-index:2;width:auto">
+                <input type="hidden" name="contact_country_code" value="+880">
+                <div class="mod-dropdown-trigger" style="height:100%;border:none;border-radius:16px 0 0 16px;border-right:1px solid rgba(255,255,255,0.08);padding:0 14px;display:flex;align-items:center;background:transparent">
+                  <span class="mod-dropdown-selected" style="font-size:15px;white-space:nowrap">🇧🇩 +880</span>
+                  <svg class="mod-dropdown-chevron" style="margin-left:6px" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+                </div>
+                <div class="mod-dropdown-panel" style="left:0;min-width:220px">
+                  <div class="mod-dropdown-option is-selected" data-value="+880"><span class="opt-check"></span><span>🇧🇩 +880 Bangladesh</span></div>
+                  <div class="mod-dropdown-option" data-value="+1"><span class="opt-check"></span><span>🇺🇸 +1 USA</span></div>
+                  <div class="mod-dropdown-option" data-value="+44"><span class="opt-check"></span><span>🇬🇧 +44 UK</span></div>
+                  <div class="mod-dropdown-option" data-value="+91"><span class="opt-check"></span><span>🇮🇳 +91 India</span></div>
+                  <div class="mod-dropdown-option" data-value="+971"><span class="opt-check"></span><span>🇦🇪 +971 UAE</span></div>
+                  <div class="mod-dropdown-option" data-value="+966"><span class="opt-check"></span><span>🇸🇦 +966 Saudi</span></div>
+                  <div class="mod-dropdown-option" data-value="+65"><span class="opt-check"></span><span>🇸🇬 +65 Singapore</span></div>
+                  <div class="mod-dropdown-option" data-value="+60"><span class="opt-check"></span><span>🇲🇾 +60 Malaysia</span></div>
+                  <div class="mod-dropdown-option" data-value="+61"><span class="opt-check"></span><span>🇦🇺 +61 Australia</span></div>
+                  <div class="mod-dropdown-option" data-value="+81"><span class="opt-check"></span><span>🇯🇵 +81 Japan</span></div>
+                  <div class="mod-dropdown-option" data-value="+82"><span class="opt-check"></span><span>🇰🇷 +82 South Korea</span></div>
+                  <div class="mod-dropdown-option" data-value="+86"><span class="opt-check"></span><span>🇨🇳 +86 China</span></div>
+                  <div class="mod-dropdown-option" data-value="+49"><span class="opt-check"></span><span>🇩🇪 +49 Germany</span></div>
+                  <div class="mod-dropdown-option" data-value="+33"><span class="opt-check"></span><span>🇫🇷 +33 France</span></div>
+                  <div class="mod-dropdown-option" data-value="+39"><span class="opt-check"></span><span>🇮🇹 +39 Italy</span></div>
+                  <div class="mod-dropdown-option" data-value="+7"><span class="opt-check"></span><span>🇷🇺 +7 Russia</span></div>
+                  <div class="mod-dropdown-option" data-value="+20"><span class="opt-check"></span><span>🇪🇬 +20 Egypt</span></div>
+                  <div class="mod-dropdown-option" data-value="+234"><span class="opt-check"></span><span>🇳🇬 +234 Nigeria</span></div>
+                </div>
               </div>
+              <input type="tel" name="contact_phone" id="contact_phone" placeholder=" " required class="block w-full bg-white/[0.02] border border-white/[0.08] rounded-2xl pl-[110px] pr-5 pt-6 pb-2 text-white text-[15px] outline-none focus:bg-white/[0.04] focus:border-[#ea741b]/50 transition-all peer">
+              <label for="contact_phone" class="absolute left-[115px] top-4 text-white/30 text-xs uppercase tracking-wider transition-all peer-placeholder-shown:text-[14px] peer-placeholder-shown:top-4 peer-placeholder-shown:normal-case peer-focus:text-xs peer-focus:top-2 peer-focus:uppercase peer-focus:text-[#ea741b] pointer-events-none font-medium">Phone Number</label>
+            </div>
 
               <div class="relative group">
                 <div class="mod-dropdown" data-name="contact_service">
@@ -1228,11 +1283,17 @@ $status_dot = $is_open ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400';
                   </div>
                 </div>
               </div>
-            </div>
 
             <div class="relative group">
               <textarea name="contact_message" id="contact_message" rows="3" placeholder=" " class="block w-full bg-white/[0.02] border border-white/[0.08] rounded-2xl px-5 pt-6 pb-2 text-white text-[15px] outline-none focus:bg-white/[0.04] focus:border-[#ea741b]/50 transition-all peer resize-none"></textarea>
               <label for="contact_message" class="absolute left-5 top-4 text-white/30 text-xs uppercase tracking-wider transition-all peer-placeholder-shown:text-[14px] peer-placeholder-shown:top-4 peer-placeholder-shown:normal-case peer-focus:text-xs peer-focus:top-2 peer-focus:uppercase peer-focus:text-[#ea741b] pointer-events-none font-medium">Message or preferred time...</label>
+            </div>
+
+            <!-- CAPTCHA -->
+            <div class="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-4">
+              <p class="text-white/40 text-xs mb-2"><i class="fas fa-shield-halved mr-1"></i> Spam check: <?= htmlspecialchars($captcha['question']) ?></p>
+              <input type="hidden" name="captcha_key" value="<?= htmlspecialchars($captcha['key']) ?>">
+              <input type="number" name="captcha_answer" required placeholder="Your answer" class="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 text-white text-sm outline-none focus:border-[#ea741b]/50 transition-all">
             </div>
 
             <button type="submit" class="w-full py-4 relative overflow-hidden rounded-2xl group mt-2">
@@ -1252,7 +1313,7 @@ $status_dot = $is_open ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400';
 </section>
 
 <!-- ═══ CLINIC OVERVIEW (SEO) ═══ -->
-<section class="py-24 bg-white relative overflow-hidden border-t border-gray-100">
+<section class="py-24 bg-white relative overflow-hidden border-t border-gray-100 lazy-section">
   <!-- Subtle background pattern -->
   <div class="absolute inset-0 opacity-[.02]"><svg width="100%" height="100%"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#004591"/></pattern></defs><rect width="100%" height="100%" fill="url(#dots)"/></svg></div>
 
@@ -1272,7 +1333,7 @@ $status_dot = $is_open ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400';
         <!-- About Box (Premium Light) -->
         <div class="bg-[#F8FAFD] rounded-3xl p-8 lg:p-10 border border-[#004591]/5 shadow-sm hover:shadow-md transition-shadow flex-1">
           <div class="flex items-center gap-4 mb-6">
-            <div class="w-12 h-12 rounded-2xl bg-[#004591]/10 flex items-center justify-center text-[#004591]"><img src="Logo.png" alt="Mamun's Ortho Dental Logo" class="w-7 h-7 object-contain"></div>
+            <div class="w-12 h-12 rounded-2xl bg-[#004591]/10 flex items-center justify-center text-[#004591]"><img src="Logo.png" alt="Mamun's Ortho Dental Logo" loading="lazy" class="w-7 h-7 object-contain"></div>
             <div>
               <h3 class="font-serif text-2xl font-bold text-[#004591]">Mamun's Ortho Dental</h3>
               <p class="text-[#ea741b] text-[10px] font-bold uppercase tracking-widest mt-0.5">Premier Dental Care Center</p>
@@ -1638,6 +1699,7 @@ document.querySelectorAll('#about [data-stagger]').forEach(el => counterObserver
     var ctx = canvas ? canvas.getContext('2d') : null;
     var gridSpacing = 40, gridCols, gridRows, heroRect;
     var mouseHeroX = -999, mouseHeroY = -999;
+    var heroVisible = true;
 
     function resizeCanvas() {
         if (!canvas) return;
@@ -1661,7 +1723,7 @@ document.querySelectorAll('#about [data-stagger]').forEach(el => counterObserver
     }
 
     function drawGrid() {
-        if (!ctx) return;
+        if (!ctx || !heroVisible) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         var radius = 120;
         for (var r = 0; r < gridRows; r++) {
@@ -1682,6 +1744,12 @@ document.querySelectorAll('#about [data-stagger]').forEach(el => counterObserver
         requestAnimationFrame(drawGrid);
     }
     drawGrid();
+
+    /* Pause animations when hero is off-screen */
+    var heroObs = new IntersectionObserver(function(entries) {
+        heroVisible = entries[0].isIntersecting;
+    }, { threshold: 0 });
+    heroObs.observe(heroEl);
 
     /* ─── Aurora Blobs (cursor-reactive) ─── */
     var auroras = document.querySelectorAll('.hero__aurora');
@@ -1727,6 +1795,7 @@ document.querySelectorAll('#about [data-stagger]').forEach(el => counterObserver
     }
 
     function updateOrbs() {
+        if (!heroVisible) { requestAnimationFrame(updateOrbs); return; }
         orbs.forEach(function(o) {
             o.curX *= 0.92; o.curY *= 0.92;
             o.el.style.marginLeft = o.curX + 'px';
@@ -1743,7 +1812,7 @@ document.querySelectorAll('#about [data-stagger]').forEach(el => counterObserver
         if (ring) { ring.style.left = dx + 'px'; ring.style.top = dy + 'px'; }
         gx += (mx - gx) * 0.04; gy += (my - gy) * 0.04;
         if (glow) { glow.style.left = gx + 'px'; glow.style.top = gy + 'px'; }
-        if (heroLight) { heroLight.style.left = gx + 'px'; heroLight.style.top = gy + 'px'; }
+        if (heroLight && heroVisible) { heroLight.style.left = gx + 'px'; heroLight.style.top = gy + 'px'; }
         requestAnimationFrame(tick);
     }
     tick();
@@ -1825,6 +1894,17 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     if(target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
   });
 });
+
+//  Lazy section loading — reveal sections only when near viewport
+const lazySectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('lazy-section--visible');
+      lazySectionObserver.unobserve(e.target);
+    }
+  });
+}, { rootMargin: '200px 0px' });
+document.querySelectorAll('.lazy-section').forEach(el => lazySectionObserver.observe(el));
 </script>
 
 <!-- ═══════════════════════════════════════════════════════
@@ -1932,7 +2012,54 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
-<script src="<?= asset('assets/js/main.js') ?>"></script>
-<script src="<?= asset('assets/js/loader.js') ?>"></script>
+
+<!-- Public Toast -->
+<div id="publicToast" style="position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);padding:16px 28px;background:#fff;border-radius:16px;display:flex;align-items:center;gap:12px;box-shadow:0 12px 40px rgba(0,0,0,0.15);opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;z-index:99999;max-width:90vw;font-family:'Outfit',sans-serif;">
+</div>
+
+<script>
+(function() {
+    var toast = document.getElementById('publicToast');
+    var params = new URLSearchParams(window.location.search);
+    var successMsg = params.get('success');
+    var errorMsg = params.get('error');
+
+    if (!toast || (!successMsg && !errorMsg)) return;
+
+    var msg = successMsg || errorMsg;
+    var isOk = !!successMsg;
+    var icon = isOk
+        ? '<div style="width:36px;height:36px;border-radius:10px;background:#ecfdf5;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-check" style="color:#10b981;font-size:14px"></i></div>'
+        : '<div style="width:36px;height:36px;border-radius:10px;background:#fef2f2;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-exclamation" style="color:#ef4444;font-size:14px"></i></div>';
+    var textColor = isOk ? '#065f46' : '#991b1b';
+
+    toast.innerHTML = icon + '<span style="font-size:14px;font-weight:600;color:' + textColor + ';white-space:nowrap">' + msg + '</span><button onclick="this.parentElement.style.opacity=0;this.parentElement.style.pointerEvents=\'none\'" style="margin-left:8px;background:none;border:none;color:#9ca3af;cursor:pointer;font-size:12px;padding:4px"><i class="fas fa-times"></i></button>';
+    toast.style.opacity = '1';
+    toast.style.pointerEvents = 'auto';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+
+    setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.pointerEvents = 'none';
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 5000);
+
+    /* Clean URL */
+    params.delete('success');
+    params.delete('error');
+    var qs = params.toString();
+    var newUrl = window.location.pathname + (qs ? '?' + qs : '') + window.location.hash;
+    window.history.replaceState({}, '', newUrl);
+
+    /* Auto-scroll to contact form */
+    setTimeout(function() {
+        var contactSection = document.getElementById('contact') || document.querySelector('form[method="POST"]');
+        if (contactSection) contactSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+})();
+</script>
+
+<script src="<?= asset('assets/js/main.js') ?>" defer></script>
+<script src="<?= asset('assets/js/loader.js') ?>" defer></script>
 </body>
 </html>

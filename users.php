@@ -1,4 +1,5 @@
 <?php
+$load_ui_components = true;
 require_once 'components/header.php';
 restrict_access(['admin']);
 require_once 'components/sidebar.php';
@@ -86,7 +87,11 @@ if ($pdo !== null) {
                     </td>
                     <td class="whitespace-nowrap px-6 py-5 text-right">
                         <div class="flex justify-end gap-2">
-                            <button onclick="openEditUserModal(<?= htmlspecialchars(json_encode($u)) ?>)" 
+                            <button onclick="openEditUserModal(this)" 
+                                    data-id="<?= $u['id'] ?>"
+                                    data-name="<?= htmlspecialchars($u['name']) ?>"
+                                    data-email="<?= htmlspecialchars($u['email']) ?>"
+                                    data-role="<?= htmlspecialchars(strtolower($u['role'])) ?>"
                                     class="w-8 h-8 rounded-lg bg-gray-50 text-gray-400 hover:bg-[#004591] hover:text-white flex items-center justify-center transition-all shadow-sm">
                                 <i class="fas fa-edit text-xs"></i>
                             </button>
@@ -105,6 +110,7 @@ if ($pdo !== null) {
                 <?php endforeach; ?>
             </tbody>
         </table>
+        </div>
     </div>
 </main>
 
@@ -173,13 +179,13 @@ function openAddUserModal() {
     document.getElementById('userModal').classList.remove('hidden');
 }
 
-function openEditUserModal(user) {
+function openEditUserModal(btn) {
     document.getElementById('modalTitle').innerText = 'Edit Staff Member';
     document.getElementById('userAction').value = 'update';
-    document.getElementById('userId').value = user.id;
-    document.getElementById('userName').value = user.name;
-    document.getElementById('userEmail').value = user.email;
-    setModDropdown('userRole', user.role.toLowerCase());
+    document.getElementById('userId').value = btn.dataset.id;
+    document.getElementById('userName').value = btn.dataset.name;
+    document.getElementById('userEmail').value = btn.dataset.email;
+    setModDropdown('userRole', btn.dataset.role);
     document.getElementById('userPassword').required = false;
     document.getElementById('pwLabel').innerText = 'Change Password (Leave blank to keep)';
     document.getElementById('userModal').classList.remove('hidden');
@@ -188,6 +194,7 @@ function openEditUserModal(user) {
 function closeUserModal() {
     document.getElementById('userModal').classList.add('hidden');
 }
+document.getElementById('userModal')?.addEventListener('click', e => { if(e.target.id === 'userModal') closeUserModal(); });
 </script>
 
 <?php require_once 'components/footer.php'; ?>

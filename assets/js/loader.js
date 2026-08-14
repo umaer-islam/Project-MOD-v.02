@@ -20,8 +20,17 @@
 
         if (!loader) return;
 
+        /* Skip loader on repeat visits OR after form submissions (success/error in URL) */
+        var hasFlash = new URLSearchParams(window.location.search).has('success') || new URLSearchParams(window.location.search).has('error');
+        if (sessionStorage.getItem('mod_loader_seen') || hasFlash) {
+            loader.parentNode.removeChild(loader);
+            document.dispatchEvent(new CustomEvent('loader:done'));
+            return;
+        }
+
         startTime = Date.now();
         document.body.style.overflow = 'hidden';
+        sessionStorage.setItem('mod_loader_seen', '1');
 
         simulateProgress();
         window.addEventListener('load', onRealLoad);

@@ -1,4 +1,5 @@
 <?php
+$load_charts = true;
 require_once 'components/header.php';
 require_once 'components/sidebar.php';
 require_once 'components/topbar.php';
@@ -363,7 +364,7 @@ $revenueUp = $revenueTrend >= 0;
                     $actions = [
                         ['label'=>'Patient',    'href'=>'patients.php',     'icon'=>'fa-user-plus',       'color'=>'text-[#004591] bg-[#e8f0fa] hover:bg-[#004591] hover:text-white'],
                         ['label'=>'Appointment','href'=>'appointments.php', 'icon'=>'fa-calendar-plus',   'color'=>'text-[#ea741b] bg-[#ea741b]/10 hover:bg-[#ea741b] hover:text-white'],
-                        ['label'=>'Payment',    'href'=>'payments.php',     'icon'=>'fa-money-bill-wave', 'color'=>'text-purple-600 bg-purple-50 hover:bg-purple-500 hover:text-white'],
+                        ['label'=>'Cash Memo', 'href'=>'cash_memos.php', 'icon'=>'fa-money-bill-wave', 'color'=>'text-purple-600 bg-purple-50 hover:bg-purple-500 hover:text-white'],
                         ['label'=>'Prescribe',  'href'=>'create_prescription.php','icon'=>'fa-pills',    'color'=>'text-rose-600 bg-rose-50 hover:bg-rose-500 hover:text-white'],
                         ['label'=>'Messages',   'href'=>'messages.php',     'icon'=>'fa-envelope',        'color'=>'text-sky-600 bg-sky-50 hover:bg-sky-500 hover:text-white'],
                     ];

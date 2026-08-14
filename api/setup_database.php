@@ -108,10 +108,13 @@ run($pdo, 'Create payments table', "CREATE TABLE IF NOT EXISTS payments (
     patient_id INT NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
     payment_method VARCHAR(50) DEFAULT 'Cash',
-    description TEXT DEFAULT NULL,
+    notes TEXT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+// ── payments: add notes column (replaces description) ──
+run($pdo, 'Payments: add notes', "ALTER TABLE payments ADD COLUMN notes TEXT DEFAULT NULL AFTER payment_method");
 
 // ── cash_memos ──
 run($pdo, 'Create cash_memos table', "CREATE TABLE IF NOT EXISTS cash_memos (
@@ -119,12 +122,21 @@ run($pdo, 'Create cash_memos table', "CREATE TABLE IF NOT EXISTS cash_memos (
     memo_number VARCHAR(50) UNIQUE NOT NULL,
     customer_name VARCHAR(255) DEFAULT NULL,
     customer_phone VARCHAR(30) DEFAULT NULL,
+    customer_address TEXT DEFAULT NULL,
+    memo_date DATE DEFAULT NULL,
     subtotal DECIMAL(10,2) DEFAULT 0,
     discount DECIMAL(10,2) DEFAULT 0,
     grand_total DECIMAL(10,2) DEFAULT 0,
+    payment_method VARCHAR(50) DEFAULT 'Cash',
+    notes TEXT DEFAULT NULL,
     created_by INT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+run($pdo, 'Cash Memos: add customer_address', "ALTER TABLE cash_memos ADD COLUMN customer_address TEXT DEFAULT NULL AFTER customer_phone");
+run($pdo, 'Cash Memos: add memo_date', "ALTER TABLE cash_memos ADD COLUMN memo_date DATE DEFAULT NULL AFTER customer_address");
+run($pdo, 'Cash Memos: add payment_method', "ALTER TABLE cash_memos ADD COLUMN payment_method VARCHAR(50) DEFAULT 'Cash' AFTER grand_total");
+run($pdo, 'Cash Memos: add notes', "ALTER TABLE cash_memos ADD COLUMN notes TEXT DEFAULT NULL AFTER payment_method");
 
 run($pdo, 'Create cash_memo_items table', "CREATE TABLE IF NOT EXISTS cash_memo_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
