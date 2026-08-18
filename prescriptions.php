@@ -96,9 +96,15 @@ try {
                                        class="w-8 h-8 rounded-lg bg-[#F4F7FC] hover:bg-[#004591] hover:text-white flex items-center justify-center text-[#7c7c7c] transition-all" title="View QR">
                                         <i class="fas fa-qrcode text-xs"></i>
                                     </a>
-                                    <a href="print_prescription.php?id=<?= $pr['id'] ?>" target="_blank" class="w-8 h-8 rounded-lg bg-[#F4F7FC] hover:bg-[#ea741b] hover:text-white flex items-center justify-center text-[#7c7c7c] transition-all" title="Print Prescription">
-                                        <i class="fas fa-print text-xs"></i>
-                                    </a>
+                                    <div class="relative group/dropdown">
+                                        <a href="print_prescription.php?id=<?= $pr['id'] ?>" target="_blank" class="w-8 h-8 rounded-lg bg-[#F4F7FC] hover:bg-[#ea741b] hover:text-white flex items-center justify-center text-[#7c7c7c] transition-all" title="Print (Text Only)">
+                                            <i class="fas fa-print text-xs"></i>
+                                        </a>
+                                        <div class="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 py-1 min-w-[160px] opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible transition-all z-50">
+                                            <a href="print_prescription.php?id=<?= $pr['id'] ?>" target="_blank" class="flex items-center gap-2 px-3 py-2 text-xs text-gray-700 hover:bg-gray-50"><i class="fas fa-align-left text-gray-400"></i> Text Only</a>
+                                            <a href="print_prescription_designed.php?id=<?= $pr['id'] ?>" target="_blank" class="flex items-center gap-2 px-3 py-2 text-xs text-gray-700 hover:bg-gray-50"><i class="fas fa-file-medical text-[#004591]"></i> With Design</a>
+                                        </div>
+                                    </div>
                                     <form method="POST" action="api/delete_prescription.php" onsubmit="return confirm('Delete this prescription? This cannot be undone.')" style="display:inline">
                                         <input type="hidden" name="id" value="<?= $pr['id'] ?>">
                                         <button type="submit" class="w-8 h-8 rounded-lg bg-[#F4F7FC] hover:bg-red-500 hover:text-white flex items-center justify-center text-[#7c7c7c] transition-all" title="Delete">

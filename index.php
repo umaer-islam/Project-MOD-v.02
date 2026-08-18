@@ -10,17 +10,11 @@ require_once 'components/math_captcha.php';
 //  Contact Form Handler 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
     $name    = trim($_POST['contact_name']    ?? '');
-    $country = trim($_POST['contact_country_code'] ?? '+880');
     $phone   = trim($_POST['contact_phone']   ?? '');
     $service = trim($_POST['contact_service'] ?? '');
     $message = trim($_POST['contact_message'] ?? '');
     $captcha_key    = $_POST['captcha_key'] ?? '';
     $captcha_answer = $_POST['captcha_answer'] ?? '';
-
-    /* Combine country code + phone if phone doesn't already start with + */
-    if ($phone && strpos($phone, '+') === false) {
-        $phone = $country . $phone;
-    }
 
     $redirectTo = '?#contact';
     if ($name && $phone) {
@@ -1046,50 +1040,37 @@ tailwind.config = { theme: { extend: {
 </section>
 
 <!--  PATIENT TRACKING  -->
-<section id="track" class="py-24 bg-[#001630] relative overflow-hidden">
-  <div class="absolute inset-0 opacity-[.03]"><svg width="100%" height="100%"><defs><pattern id="trackGrid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="white" stroke-width=".5"/></pattern></defs><rect width="100%" height="100%" fill="url(#trackGrid)"/></svg></div>
-  <div class="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#ea741b]/8 rounded-full filter blur-[120px]"></div>
-  <div class="absolute bottom-0 left-1/3 w-[400px] h-[400px] bg-[#004591]/10 rounded-full filter blur-[100px]"></div>
+<section id="track" class="py-20 lg:py-28 bg-[#001630] relative overflow-hidden">
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#ea741b]/[0.04] rounded-full filter blur-[100px]"></div>
 
-  <div class="max-w-4xl mx-auto px-5 lg:px-8 relative z-10 text-center">
+  <div class="max-w-2xl mx-auto px-5 relative z-10 text-center">
     <div class="reveal">
-      <div class="gold-bar mx-auto mb-5"></div>
-      <p class="text-[#ea741b] text-[11px] font-bold uppercase tracking-[.3em] mb-3 flex items-center justify-center gap-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#ea741b] animate-pulse"></span> Patient Portal
-      </p>
-      <h2 class="font-serif text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">Track Your Treatment</h2>
-      <p class="text-white/40 text-sm max-w-lg mx-auto mb-10">Enter your Patient ID to view your prescriptions, appointments, payments, and complete treatment history.</p>
+      <p class="text-[#ea741b] text-[10px] font-bold uppercase tracking-[.35em] mb-4">Patient Portal</p>
+      <h2 class="font-serif text-3xl lg:text-4xl font-bold text-white mb-3">Track Your Treatment</h2>
+      <p class="text-white/30 text-sm mb-10 max-w-md mx-auto">View your prescriptions, appointments, and complete treatment history.</p>
     </div>
 
-    <div class="reveal max-w-xl mx-auto">
-      <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,.3)]">
-        <form id="trackForm" class="space-y-5" onsubmit="return trackPatient()">
-          <div class="relative">
-            <div class="absolute left-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-[#ea741b]/10 flex items-center justify-center">
-              <i class="fas fa-id-card text-[#ea741b]"></i>
-            </div>
-            <input
-              type="text"
-              id="trackInput"
-              placeholder="Enter your Patient ID (e.g. MOD-1234)"
-              class="w-full pl-16 pr-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white text-sm font-medium placeholder:text-white/30 focus:outline-none focus:border-[#ea741b]/50 focus:bg-white/8 focus:ring-2 focus:ring-[#ea741b]/10 transition-all"
-              maxlength="9"
-              autocomplete="off"
-              required
-            >
-          </div>
-          <div id="trackError" class="hidden text-red-400 text-xs font-medium text-left px-2"></div>
-          <button type="submit" class="w-full py-4 bg-gradient-to-r from-[#ea741b] to-[#cf5e0e] hover:from-[#cf5e0e] hover:to-[#ea741b] text-white text-[11px] font-bold uppercase tracking-widest rounded-2xl transition-all duration-300 shadow-lg shadow-[#ea741b]/20 hover:shadow-[#ea741b]/40 hover:-translate-y-0.5 flex items-center justify-center gap-2">
-            <i class="fas fa-search text-xs"></i> Track My Records
-          </button>
-        </form>
-        <div class="mt-5 pt-5 border-t border-white/5 flex items-center justify-center gap-6 text-white/25 text-[11px]">
-          <span class="flex items-center gap-1.5"><i class="fas fa-shield-halved text-[#ea741b]/50"></i> Secure & Private</span>
-          <span class="flex items-center gap-1.5"><i class="fas fa-clock text-[#ea741b]/50"></i> Instant Access</span>
-          <span class="flex items-center gap-1.5"><i class="fas fa-mobile-screen text-[#ea741b]/50"></i> Mobile Friendly</span>
-        </div>
-      </div>
+    <div class="reveal">
+      <form id="trackForm" onsubmit="return trackPatient()" class="flex items-center gap-2 max-w-lg mx-auto">
+        <input
+          type="text"
+          id="trackInput"
+          placeholder="Patient ID (e.g. MOD-1234)"
+          class="flex-1 h-12 px-5 bg-white/[0.07] border border-white/10 rounded-full text-white text-sm font-medium placeholder:text-white/25 focus:outline-none focus:border-[#ea741b]/40 focus:bg-white/[0.1] transition-all"
+          maxlength="9"
+          autocomplete="off"
+          required
+        >
+        <button type="submit" class="h-12 px-6 bg-[#ea741b] hover:bg-[#cf5e0e] text-white text-[11px] font-bold uppercase tracking-widest rounded-full transition-all flex items-center gap-2 flex-shrink-0">
+          <i class="fas fa-arrow-right text-xs"></i>
+        </button>
+      </form>
+      <div id="trackError" class="hidden text-red-400 text-xs font-medium mt-3 max-w-lg mx-auto text-left pl-5"></div>
     </div>
+
+    <p class="reveal text-white/20 text-[11px] mt-8">
+      <i class="fas fa-shield-halved text-white/15 mr-1"></i> Secure &middot; Instant Access &middot; Mobile Friendly
+    </p>
   </div>
 </section>
 <script>
@@ -1109,7 +1090,7 @@ function trackPatient() {
   }
 
   if (!/^MOD-\d{4}$/.test(val)) {
-    error.textContent = 'Invalid format. Patient ID must be MOD-XXXX (e.g. MOD-1234).';
+    error.textContent = 'Invalid format. Must be MOD-XXXX (e.g. MOD-1234).';
     error.classList.remove('hidden');
     input.classList.add('border-red-500/50');
     return false;
@@ -1230,35 +1211,8 @@ $status_dot = $is_open ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400';
             </div>
 
             <div class="relative group">
-              <div class="mod-dropdown relative" id="contactCountryCode" data-name="contact_country_code" data-placeholder="Code" style="position:absolute;left:0;top:0;bottom:0;z-index:2;width:auto">
-                <input type="hidden" name="contact_country_code" value="+880">
-                <div class="mod-dropdown-trigger" style="height:100%;border:none;border-radius:16px 0 0 16px;border-right:1px solid rgba(255,255,255,0.08);padding:0 14px;display:flex;align-items:center;background:transparent">
-                  <span class="mod-dropdown-selected" style="font-size:15px;white-space:nowrap">🇧🇩 +880</span>
-                  <svg class="mod-dropdown-chevron" style="margin-left:6px" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
-                </div>
-                <div class="mod-dropdown-panel" style="left:0;min-width:220px">
-                  <div class="mod-dropdown-option is-selected" data-value="+880"><span class="opt-check"></span><span>🇧🇩 +880 Bangladesh</span></div>
-                  <div class="mod-dropdown-option" data-value="+1"><span class="opt-check"></span><span>🇺🇸 +1 USA</span></div>
-                  <div class="mod-dropdown-option" data-value="+44"><span class="opt-check"></span><span>🇬🇧 +44 UK</span></div>
-                  <div class="mod-dropdown-option" data-value="+91"><span class="opt-check"></span><span>🇮🇳 +91 India</span></div>
-                  <div class="mod-dropdown-option" data-value="+971"><span class="opt-check"></span><span>🇦🇪 +971 UAE</span></div>
-                  <div class="mod-dropdown-option" data-value="+966"><span class="opt-check"></span><span>🇸🇦 +966 Saudi</span></div>
-                  <div class="mod-dropdown-option" data-value="+65"><span class="opt-check"></span><span>🇸🇬 +65 Singapore</span></div>
-                  <div class="mod-dropdown-option" data-value="+60"><span class="opt-check"></span><span>🇲🇾 +60 Malaysia</span></div>
-                  <div class="mod-dropdown-option" data-value="+61"><span class="opt-check"></span><span>🇦🇺 +61 Australia</span></div>
-                  <div class="mod-dropdown-option" data-value="+81"><span class="opt-check"></span><span>🇯🇵 +81 Japan</span></div>
-                  <div class="mod-dropdown-option" data-value="+82"><span class="opt-check"></span><span>🇰🇷 +82 South Korea</span></div>
-                  <div class="mod-dropdown-option" data-value="+86"><span class="opt-check"></span><span>🇨🇳 +86 China</span></div>
-                  <div class="mod-dropdown-option" data-value="+49"><span class="opt-check"></span><span>🇩🇪 +49 Germany</span></div>
-                  <div class="mod-dropdown-option" data-value="+33"><span class="opt-check"></span><span>🇫🇷 +33 France</span></div>
-                  <div class="mod-dropdown-option" data-value="+39"><span class="opt-check"></span><span>🇮🇹 +39 Italy</span></div>
-                  <div class="mod-dropdown-option" data-value="+7"><span class="opt-check"></span><span>🇷🇺 +7 Russia</span></div>
-                  <div class="mod-dropdown-option" data-value="+20"><span class="opt-check"></span><span>🇪🇬 +20 Egypt</span></div>
-                  <div class="mod-dropdown-option" data-value="+234"><span class="opt-check"></span><span>🇳🇬 +234 Nigeria</span></div>
-                </div>
-              </div>
-              <input type="tel" name="contact_phone" id="contact_phone" placeholder=" " required class="block w-full bg-white/[0.02] border border-white/[0.08] rounded-2xl pl-[110px] pr-5 pt-6 pb-2 text-white text-[15px] outline-none focus:bg-white/[0.04] focus:border-[#ea741b]/50 transition-all peer">
-              <label for="contact_phone" class="absolute left-[115px] top-4 text-white/30 text-xs uppercase tracking-wider transition-all peer-placeholder-shown:text-[14px] peer-placeholder-shown:top-4 peer-placeholder-shown:normal-case peer-focus:text-xs peer-focus:top-2 peer-focus:uppercase peer-focus:text-[#ea741b] pointer-events-none font-medium">Phone Number</label>
+              <input type="tel" inputmode="numeric" pattern="[0-9]*" name="contact_phone" id="contact_phone" placeholder=" " required class="block w-full bg-white/[0.02] border border-white/[0.08] rounded-2xl px-5 pt-6 pb-2 text-white text-[15px] outline-none focus:bg-white/[0.04] focus:border-[#ea741b]/50 transition-all peer">
+              <label for="contact_phone" class="absolute left-5 top-4 text-white/30 text-xs uppercase tracking-wider transition-all peer-placeholder-shown:text-[14px] peer-placeholder-shown:top-4 peer-placeholder-shown:normal-case peer-focus:text-xs peer-focus:top-2 peer-focus:uppercase peer-focus:text-[#ea741b] pointer-events-none font-medium">Phone Number</label>
             </div>
 
               <div class="relative group">

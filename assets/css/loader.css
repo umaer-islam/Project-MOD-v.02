@@ -23,8 +23,8 @@
 /* ─── Subtle Radial Glow ─── */
 .mod-loader__glow {
     position: absolute;
-    width: 400px;
-    height: 400px;
+    width: min(400px, 90vw);
+    height: min(400px, 90vw);
     border-radius: 50%;
     background: radial-gradient(circle, rgba(0, 69, 145, 0.04) 0%, transparent 70%);
     opacity: 0;
@@ -38,8 +38,8 @@
 /* ─── Logo Assembly Container ─── */
 .mod-loader__logo {
     position: relative;
-    width: 220px;
-    height: 220px;
+    width: min(220px, 55vw);
+    height: min(220px, 55vw);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -91,8 +91,8 @@
 .mod-loader__svg-wrap {
     position: relative;
     z-index: 2;
-    width: 160px;
-    height: 160px;
+    width: min(160px, 40vw);
+    height: min(160px, 40vw);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -177,8 +177,9 @@
 
 /* ─── Text Reveal ─── */
 .mod-loader__text {
-    margin-top: 40px;
+    margin-top: min(40px, 8vw);
     text-align: center;
+    padding: 0 16px;
 }
 
 .mod-loader__brand-line {
@@ -188,7 +189,7 @@
 }
 
 .mod-loader__brand {
-    font-size: 1.6rem;
+    font-size: clamp(1.1rem, 4vw, 1.6rem);
     font-weight: 800;
     color: #004591;
     letter-spacing: 5px;
@@ -199,7 +200,7 @@
 }
 
 .mod-loader__sub {
-    font-size: 0.68rem;
+    font-size: clamp(0.5rem, 2.2vw, 0.68rem);
     font-weight: 500;
     color: #ea741b;
     letter-spacing: 6px;
@@ -281,18 +282,14 @@
    ═══════════════════════════════════════════════════════════════════ */
 
 @media (max-width: 540px) {
-    .mod-loader__svg-wrap {
-        width: 120px;
-        height: 120px;
-    }
+    .mod-loader__ring { inset: -8px; }
+    .mod-loader__orbit { inset: -20px; }
 
     .mod-loader__brand {
-        font-size: 1.2rem;
         letter-spacing: 3px;
     }
 
     .mod-loader__sub {
-        font-size: 0.6rem;
         letter-spacing: 4px;
     }
 

@@ -45,7 +45,6 @@ if ($pdo !== null) {
 $follow_up_display = !empty($pr['follow_up']) ? $pr['follow_up'] : '';
 $rx_date_display = !empty($pr['rx_date']) ? date('d/m/Y', strtotime($pr['rx_date'])) : date('d/m/Y', strtotime($pr['created_at']));
 
-// Generate patient-specific QR code URL
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
 $baseUrl = $protocol . $_SERVER['HTTP_HOST'];
 $patientRecordUrl = $baseUrl . '/patient_record.php?pid=' . urlencode($pr['p_id']);
@@ -127,8 +126,6 @@ $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=004
             position: relative;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
             border-radius: 4px;
-            /* Default background rendering during browser preview */
-            background-image: url('<?= !empty($pr['rx_template_path']) ? htmlspecialchars($pr['rx_template_path']) : '' ?>');
         }
 
         /* Patient Name: X=88, Y=140, W=190, H=22 */
@@ -302,8 +299,6 @@ $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=004
             display: block;
         }
 
-
-        /* ── PRINT MEDIA CONFIGURATION ── */
         @media print {
             body {
                 background: none !important;
@@ -318,7 +313,7 @@ $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=004
                 margin: 0 !important;
                 border: none !important;
                 border-radius: 0 !important;
-                background-image: none !important; /* CRITICAL: Never print background template! */
+                background-image: none !important;
                 background-color: transparent !important;
                 width: 612pt !important;
                 height: 792pt !important;

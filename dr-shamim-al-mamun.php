@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once 'database/connection.php';
-require_once 'components/assets.php';
 ?>
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
@@ -51,7 +50,7 @@ require_once 'components/assets.php';
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="<?= asset('assets/css/landing.css') ?>">
+<link rel="stylesheet" href="assets/css/landing.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = { theme: { extend: {
@@ -95,7 +94,7 @@ tailwind.config = { theme: { extend: {
   },
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "5/4 (2nd Floor), Block A, Road 5, Lalmatia",
+    "streetAddress": "5/2 (2nd Floor), Block A, Road 5, Lalmatia",
     "addressLocality": "Mohammadpur",
     "addressRegion": "Dhaka",
     "postalCode": "1207",
@@ -234,7 +233,7 @@ tailwind.config = { theme: { extend: {
         
         <div class="space-y-4 not-prose">
           <?php foreach([
-            ['Where is Dr. Shamim Al Mamun\'s clinic located?', 'Dr. Mamun\'s clinic — Mamun\'s Ortho Dental — is located at 5/4 (2nd Floor), Block A, Road 5, Lalmatia, Mohammadpur, Dhaka-1207, Bangladesh. It is open Saturday to Thursday, 9 AM to 9 PM.'],
+            ['Where is Dr. Shamim Al Mamun\'s clinic located?', 'Dr. Mamun\'s clinic — Mamun\'s Ortho Dental — is located at 5/2 (2nd Floor), Block A, Road 5, Lalmatia, Mohammadpur, Dhaka-1207, Bangladesh. It is open Saturday to Thursday, 9 AM to 9 PM.'],
             ['What are Dr. Mamun\'s qualifications?', 'Dr. Mamun holds a BDS from Dhaka Dental College and FCPS in Orthodontics from BCPS. He is also specially trained in Implantology and serves as Associate Professor at Bangladesh Dental College.'],
             ['How much does braces treatment cost with Dr. Mamun?', 'Braces treatment cost varies depending on the type (metal, ceramic, or clear aligners) and complexity of the case. Please contact the clinic directly for a personalised consultation and quote.'],
             ['Does Dr. Mamun treat children for orthodontics?', 'Yes. Dr. Mamun treats orthodontic patients of all ages, including children as young as 7 years old. Early intervention can prevent more complex issues later.'],
